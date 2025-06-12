@@ -14,7 +14,7 @@ export default defineConfigWithVueTs(
     files: ['**/*.{ts,mts,tsx,vue}'],
   },
 
-  globalIgnores(['**/utils/**','**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/typings.d.ts', '**/api/**']),
+  globalIgnores(['**/src/**','**/utils/**','**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/typings.d.ts', '**/api/**']),
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',

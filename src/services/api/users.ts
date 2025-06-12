@@ -68,6 +68,14 @@ export async function deleteUserApiV1UsersUserIdDelete(
   })
 }
 
+/** 删除用户头像 删除当前用户的头像 DELETE /api/v1/users/avatar */
+export async function deleteAvatarApiV1UsersAvatarDelete(options?: { [key: string]: any }) {
+  return request<API.ApiResponseDict_>('/api/v1/users/avatar', {
+    method: 'DELETE',
+    ...(options || {}),
+  })
+}
+
 /** 修改密码 修改当前用户密码 POST /api/v1/users/change-password */
 export async function changePasswordApiV1UsersChangePasswordPost(
   body: API.ChangePasswordSchema,
@@ -118,6 +126,16 @@ export async function loginApiV1UsersLoginPost(
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  })
+}
+
+/** 用户退出登录 用户退出登录接口
+
+退出当前登录状态，前端需要清除本地存储的token POST /api/v1/users/logout */
+export async function logoutApiV1UsersLogoutPost(options?: { [key: string]: any }) {
+  return request<API.ApiResponseDict_>('/api/v1/users/logout', {
+    method: 'POST',
     ...(options || {}),
   })
 }
@@ -206,6 +224,46 @@ export async function sendVerificationCodeApiV1UsersSendVerificationCodePost(
       ...(options || {}),
     }
   )
+}
+
+/** 上传用户头像 上传用户头像
+
+- **file**: 头像图片文件（支持jpg、jpeg、png、gif、webp格式，最大10MB）
+
+自动压缩图片并上传到腾讯云COS POST /api/v1/users/upload-avatar */
+export async function uploadAvatarApiV1UsersUploadAvatarPost(
+  body: API.BodyUploadAvatarApiV1UsersUploadAvatarPost,
+  file?: File,
+  options?: { [key: string]: any }
+) {
+  const formData = new FormData()
+
+  if (file) {
+    formData.append('file', file)
+  }
+
+  Object.keys(body).forEach((ele) => {
+    const item = (body as any)[ele]
+
+    if (item !== undefined && item !== null) {
+      if (typeof item === 'object' && !(item instanceof File)) {
+        if (item instanceof Array) {
+          item.forEach((f) => formData.append(ele, f || ''))
+        } else {
+          formData.append(ele, JSON.stringify(item))
+        }
+      } else {
+        formData.append(ele, item)
+      }
+    }
+  })
+
+  return request<API.ApiResponseUploadResponseSchema_>('/api/v1/users/upload-avatar', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+    ...(options || {}),
+  })
 }
 
 /** 验证邮箱验证码 验证邮箱验证码

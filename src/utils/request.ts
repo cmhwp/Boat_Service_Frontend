@@ -21,8 +21,8 @@ const request: AxiosInstance = axios.create({
   baseURL: 'http://localhost:8000', // 后端API基础URL
   timeout: 15000,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 })
 
 // 请求拦截器
@@ -44,16 +44,16 @@ request.interceptors.request.use(
   (error) => {
     console.error('请求拦截器错误:', error)
     return Promise.reject(error)
-  }
+  },
 )
 
 // 响应拦截器
 request.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
     const { data } = response
-
     // 处理业务成功
-    if (data.success || response.status === 200) {
+    if (data.success || response.data.code === 200) {
+      ElMessage.success(data.message)
       return response
     }
 
@@ -66,6 +66,7 @@ request.interceptors.response.use(
 
     if (error.response) {
       const { status, data } = error.response
+      console.log(data)
 
       switch (status) {
         case 401:
@@ -74,7 +75,7 @@ request.interceptors.response.use(
           localStorage.removeItem('access_token')
           localStorage.removeItem('user_info')
           // 跳转到登录页
-          window.location.href = '/login'
+          window.location.href = '/auth/login'
           break
         case 403:
           ElMessage.error('无权限访问')
@@ -95,36 +96,42 @@ request.interceptors.response.use(
     }
 
     return Promise.reject(error)
-  }
+  },
 )
 
 // 封装常用请求方法
 export const http = {
   get<T = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return request.get(url, config).then(res => res.data)
+    return request.get(url, config).then((res) => res.data)
   },
 
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return request.post(url, data, config).then(res => res.data)
+    return request.post(url, data, config).then((res) => res.data)
   },
 
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return request.put(url, data, config).then(res => res.data)
+    return request.put(url, data, config).then((res) => res.data)
   },
 
   delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return request.delete(url, config).then(res => res.data)
+    return request.delete(url, config).then((res) => res.data)
   },
 
-  upload<T = any>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return request.post(url, formData, {
-      ...config,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        ...config?.headers
-      }
-    }).then(res => res.data)
-  }
+  upload<T = any>(
+    url: string,
+    formData: FormData,
+    config?: AxiosRequestConfig,
+  ): Promise<ApiResponse<T>> {
+    return request
+      .post(url, formData, {
+        ...config,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          ...config?.headers,
+        },
+      })
+      .then((res) => res.data)
+  },
 }
 
 export default request
