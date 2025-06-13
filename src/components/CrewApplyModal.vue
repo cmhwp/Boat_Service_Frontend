@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
-import { getMerchantsListApiV1MerchantsGet } from '@/services/api/merchants'
+import { getAvailableMerchantsApiV1CrewMerchantsGet } from '@/services/api/crew'
 import { useCrewStore } from '@/stores/crew'
 
 // Props
@@ -163,10 +163,9 @@ const loadInitialMerchants = async () => {
 const searchMerchants = async (query: string) => {
   searching.value = true
   try {
-    const response = await getMerchantsListApiV1MerchantsGet({
+    const response = await getAvailableMerchantsApiV1CrewMerchantsGet({
       page: 1,
       page_size: 50,
-      status: 'active' as API.MerchantStatus,
     })
 
     if (response.data?.success && response.data?.data) {

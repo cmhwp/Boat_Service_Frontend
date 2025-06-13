@@ -132,6 +132,30 @@ export async function getMyCrewInfoApiV1CrewMeGet(options?: { [key: string]: any
   })
 }
 
+/** 获取可申请的商家列表 获取可申请的商家列表
+
+- **page**: 页码（默认1）
+- **page_size**: 每页数量（默认10，最大100）
+
+返回所有审核通过（active状态）的商家列表，用户可以从中选择申请成为船员 GET /api/v1/crew/merchants */
+export async function getAvailableMerchantsApiV1CrewMerchantsGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getAvailableMerchantsApiV1CrewMerchantsGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponsePaginatedDataMerchantListItemSchema_>('/api/v1/crew/merchants', {
+    method: 'GET',
+    params: {
+      // page has a default value: 1
+      page: '1',
+      // page_size has a default value: 10
+      page_size: '10',
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
 /** 获取我的申请列表 获取我的船员申请列表 GET /api/v1/crew/my-applications */
 export async function getMyCrewApplicationsApiV1CrewMyApplicationsGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

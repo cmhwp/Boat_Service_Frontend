@@ -390,6 +390,13 @@ declare namespace API {
     email: string
   }
 
+  type getAvailableMerchantsApiV1CrewMerchantsGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+  }
+
   type getCrewApplicationsApiV1CrewApplicationsGetParams = {
     /** 页码 */
     page?: number
