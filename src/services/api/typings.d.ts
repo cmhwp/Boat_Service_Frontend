@@ -1,4 +1,34 @@
 declare namespace API {
+  type ApiResponseCrewApplicationResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: CrewApplicationResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseCrewDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: CrewDetailSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseCrewResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: CrewResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponseDict_ = {
     /** Code */
     code: number
@@ -20,10 +50,81 @@ declare namespace API {
     success: boolean
   }
 
+  type ApiResponseList_ = {
+    /** Code */
+    code: number
+    /** Data */
+    data?: any[] | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponseLoginResponseSchema_ = {
     /** Code */
     code: number
     data?: LoginResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseMerchantAuditResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: MerchantAuditResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseMerchantDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: MerchantDetailSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseMerchantResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: MerchantResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponsePaginatedDataCrewApplicationDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataCrewApplicationDetailSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponsePaginatedDataCrewListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataCrewListItemSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponsePaginatedDataMerchantListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataMerchantListItemSchema_ | null
     /** Message */
     message: string
     /** Success */
@@ -90,6 +191,8 @@ declare namespace API {
     success: boolean
   }
 
+  type AuditResult = 'approved' | 'rejected'
+
   type BodySubmitRealnameAuthApiV1RealnameAuthSubmitPost = {
     /** Real Name 真实姓名 */
     real_name: string
@@ -124,6 +227,11 @@ declare namespace API {
     back_image?: string | null
   }
 
+  type BodyUploadMerchantLicenseApiV1MerchantsUploadLicensePost = {
+    /** File 营业执照图片文件 */
+    file: string
+  }
+
   type ChangePasswordSchema = {
     /** Old Password */
     old_password: string
@@ -144,6 +252,131 @@ declare namespace API {
     verification_code: string
   }
 
+  type CrewApplicationDetailSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Id */
+    merchant_id: number
+    status: CrewApplicationStatus
+    /** Apply Time */
+    apply_time: string
+    /** Handle Time */
+    handle_time: string | null
+    /** Created At */
+    created_at: string
+    /** Updated At */
+    updated_at: string
+    /** User */
+    user?: Record<string, any> | null
+    /** Merchant */
+    merchant?: Record<string, any> | null
+  }
+
+  type CrewApplicationHandleSchema = {
+    /** Application Id */
+    application_id: number
+    status: CrewApplicationStatus
+    /** Boat License */
+    boat_license?: string | null
+  }
+
+  type CrewApplicationResponseSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Id */
+    merchant_id: number
+    status: CrewApplicationStatus
+    /** Apply Time */
+    apply_time: string
+    /** Handle Time */
+    handle_time: string | null
+    /** Created At */
+    created_at: string
+    /** Updated At */
+    updated_at: string
+  }
+
+  type CrewApplicationSchema = {
+    /** Merchant Id */
+    merchant_id: number
+  }
+
+  type CrewApplicationStatus = 'pending' | 'approved' | 'rejected'
+
+  type CrewDetailSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Id */
+    merchant_id: number
+    /** Boat License */
+    boat_license: string
+    status: CrewStatus
+    /** Rating */
+    rating: number
+    /** Join Time */
+    join_time: string
+    /** Created At */
+    created_at: string
+    /** Updated At */
+    updated_at: string
+    /** User */
+    user?: Record<string, any> | null
+    /** Merchant */
+    merchant?: Record<string, any> | null
+  }
+
+  type CrewListItemSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Id */
+    merchant_id: number
+    /** Boat License */
+    boat_license: string
+    status: CrewStatus
+    /** Rating */
+    rating: number
+    /** Join Time */
+    join_time: string
+  }
+
+  type CrewResponseSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Id */
+    merchant_id: number
+    /** Boat License */
+    boat_license: string
+    status: CrewStatus
+    /** Rating */
+    rating: number
+    /** Join Time */
+    join_time: string
+    /** Created At */
+    created_at: string
+    /** Updated At */
+    updated_at: string
+  }
+
+  type CrewStatus = 'active' | 'inactive'
+
+  type CrewUpdateSchema = {
+    /** Boat License */
+    boat_license?: string | null
+    status?: CrewStatus | null
+    /** Rating */
+    rating?: number | null
+  }
+
   type deleteRealnameAuthApiV1RealnameAuthAuthIdDeleteParams = {
     auth_id: number
   }
@@ -155,6 +388,55 @@ declare namespace API {
   type ForgotPasswordSchema = {
     /** Email */
     email: string
+  }
+
+  type getCrewApplicationsApiV1CrewApplicationsGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+  }
+
+  type getCrewDetailApiV1CrewCrewIdGetParams = {
+    crew_id: number
+  }
+
+  type getCrewListApiV1CrewListGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+  }
+
+  type getMerchantAuditHistoryApiV1MerchantsMerchantIdAuditHistoryGetParams = {
+    merchant_id: number
+  }
+
+  type getMerchantByIdApiV1MerchantsMerchantIdGetParams = {
+    merchant_id: number
+  }
+
+  type getMerchantsListApiV1MerchantsGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 状态过滤 */
+    status?: MerchantStatus | null
+  }
+
+  type getMyCrewApplicationsApiV1CrewMyApplicationsGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+  }
+
+  type getPendingMerchantsApiV1MerchantsPendingGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
   }
 
   type getRealnameAuthDetailApiV1RealnameAuthAuthIdGetParams = {
@@ -203,6 +485,165 @@ declare namespace API {
     /** Expires In */
     expires_in: number
     user: UserResponseSchema
+  }
+
+  type MerchantApplySchema = {
+    /** Merchant Name */
+    merchant_name: string
+    /** License Number */
+    license_number: string
+    /** License Image */
+    license_image: string
+    /** Contact Phone */
+    contact_phone: string
+    /** Address */
+    address?: string | null
+    /** Description */
+    description?: string | null
+  }
+
+  type MerchantAuditResponseSchema = {
+    /** Id */
+    id: number
+    /** Merchant Id */
+    merchant_id: number
+    /** Admin Id */
+    admin_id: number
+    audit_result: AuditResult
+    /** Comment */
+    comment: string | null
+    /** Created At */
+    created_at: string
+  }
+
+  type MerchantAuditSchema = {
+    /** Merchant Id */
+    merchant_id: number
+    audit_result: AuditResult
+    /** Comment */
+    comment?: string | null
+  }
+
+  type MerchantDetailSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Name */
+    merchant_name: string
+    /** License Number */
+    license_number: string
+    /** License Image */
+    license_image: string
+    /** Contact Phone */
+    contact_phone: string
+    /** Address */
+    address: string | null
+    /** Description */
+    description: string | null
+    status: MerchantStatus
+    /** Created At */
+    created_at: string
+    /** Updated At */
+    updated_at: string
+    /** User */
+    user?: Record<string, any> | null
+    /** Audits */
+    audits?: any[] | null
+  }
+
+  type MerchantListItemSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Name */
+    merchant_name: string
+    /** License Number */
+    license_number: string
+    /** Contact Phone */
+    contact_phone: string
+    /** Address */
+    address: string | null
+    status: MerchantStatus
+    /** Created At */
+    created_at: string
+  }
+
+  type MerchantResponseSchema = {
+    /** Id */
+    id: number
+    /** User Id */
+    user_id: number
+    /** Merchant Name */
+    merchant_name: string
+    /** License Number */
+    license_number: string
+    /** License Image */
+    license_image: string
+    /** Contact Phone */
+    contact_phone: string
+    /** Address */
+    address: string | null
+    /** Description */
+    description: string | null
+    status: MerchantStatus
+    /** Created At */
+    created_at: string
+    /** Updated At */
+    updated_at: string
+  }
+
+  type MerchantStatus = 'pending' | 'active' | 'suspended'
+
+  type MerchantUpdateSchema = {
+    /** Merchant Name */
+    merchant_name?: string | null
+    /** Contact Phone */
+    contact_phone?: string | null
+    /** Address */
+    address?: string | null
+    /** Description */
+    description?: string | null
+  }
+
+  type PaginatedDataCrewApplicationDetailSchema_ = {
+    /** Items */
+    items: CrewApplicationDetailSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
+  type PaginatedDataCrewListItemSchema_ = {
+    /** Items */
+    items: CrewListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
+  type PaginatedDataMerchantListItemSchema_ = {
+    /** Items */
+    items: MerchantListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
   }
 
   type PaginatedDataRealnameAuthListItemSchema_ = {
@@ -291,6 +732,10 @@ declare namespace API {
   type SendVerificationCodeSchema = {
     /** Email */
     email: string
+  }
+
+  type updateCrewApiV1CrewCrewIdPutParams = {
+    crew_id: number
   }
 
   type updateRealnameAuthStatusApiV1RealnameAuthAuthIdStatusPutParams = {

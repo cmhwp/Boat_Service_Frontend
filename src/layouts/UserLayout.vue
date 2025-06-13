@@ -27,6 +27,7 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+              <el-dropdown-item command="qualification">资格认证</el-dropdown-item>
               <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -65,6 +66,9 @@ const handleCommand = async (command: string) => {
   switch (command) {
     case 'profile':
       router.push('/user/profile')
+      break
+    case 'qualification':
+      router.push('/user/qualification')
       break
     case 'logout':
       try {

@@ -74,6 +74,15 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
+        {
+          path: 'qualification',
+          name: 'UserQualification',
+          component: () => import('@/views/user/QualificationView.vue'),
+          meta: {
+            title: '资格认证 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
       ],
     },
 
