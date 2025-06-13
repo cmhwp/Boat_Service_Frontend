@@ -22,7 +22,31 @@
                     {{ userInfo?.email || '未设置' }}
                   </el-descriptions-item>
                   <el-descriptions-item label="手机号">
-                    {{ userInfo?.phone || '未绑定' }}
+                    <div v-if="!isEditingPhone" class="phone-display">
+                      <span>{{ userInfo?.phone || '未绑定' }}</span>
+                      <el-button
+                        type="primary"
+                        size="small"
+                        link
+                        @click="handleEditPhone"
+                        style="margin-left: 8px"
+                      >
+                        {{ userInfo?.phone ? '修改' : '绑定' }}
+                      </el-button>
+                    </div>
+                    <div v-else class="phone-edit">
+                      <el-input
+                        v-model="editPhone"
+                        placeholder="请输入手机号"
+                        style="width: 200px; margin-right: 8px"
+                        maxlength="11"
+                        @keyup.enter="handleSavePhone"
+                      />
+                      <el-button type="primary" size="small" @click="handleSavePhone">
+                        保存
+                      </el-button>
+                      <el-button size="small" @click="handleCancelEditPhone"> 取消 </el-button>
+                    </div>
                   </el-descriptions-item>
                   <el-descriptions-item label="用户角色">
                     <el-tag :type="getRoleType(userInfo?.role)">
@@ -110,6 +134,53 @@
                 </div>
               </div>
             </el-tab-pane>
+
+            <!-- 修改密码标签页 -->
+            <el-tab-pane label="修改密码" name="password">
+              <div class="password-content">
+                <el-form
+                  ref="passwordFormRef"
+                  :model="passwordForm"
+                  :rules="passwordRules"
+                  label-width="100px"
+                  class="password-form"
+                >
+                  <el-form-item label="当前密码" prop="old_password">
+                    <el-input
+                      v-model="passwordForm.old_password"
+                      type="password"
+                      placeholder="请输入当前密码"
+                      show-password
+                    />
+                  </el-form-item>
+                  <el-form-item label="新密码" prop="new_password">
+                    <el-input
+                      v-model="passwordForm.new_password"
+                      type="password"
+                      placeholder="请输入新密码"
+                      show-password
+                    />
+                  </el-form-item>
+                  <el-form-item label="确认密码" prop="confirm_password">
+                    <el-input
+                      v-model="passwordForm.confirm_password"
+                      type="password"
+                      placeholder="请再次输入新密码"
+                      show-password
+                    />
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button
+                      type="primary"
+                      @click="handleChangePassword"
+                      :loading="changingPassword"
+                    >
+                      确认修改
+                    </el-button>
+                  </el-form-item>
+                </el-form>
+              </div>
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </div>
@@ -178,8 +249,13 @@ import { ElMessage, type UploadProps, type UploadRequestOptions } from 'element-
 import { UserFilled, Upload, SuccessFilled, WarningFilled, Loading } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRealnameStore } from '@/stores/realname'
-import { uploadAvatarApiV1UsersUploadAvatarPost } from '@/services/api/users'
+import {
+  uploadAvatarApiV1UsersUploadAvatarPost,
+  updateCurrentUserApiV1UsersMePut,
+  changePasswordApiV1UsersChangePasswordPost,
+} from '@/services/api/users'
 import RealnameAuthModal from '@/components/RealnameAuthModal.vue'
+import type { FormInstance, FormRules } from 'element-plus'
 
 // Store
 const authStore = useAuthStore()
@@ -189,6 +265,17 @@ const realnameStore = useRealnameStore()
 const activeTab = ref('basic')
 const showRealnameModal = ref(false)
 const editRealnameData = ref<API.RealnameAuthResponseSchema | null>(null)
+const isEditingPhone = ref(false)
+const editPhone = ref('')
+
+// 密码修改相关
+const passwordFormRef = ref<FormInstance>()
+const changingPassword = ref(false)
+const passwordForm = ref({
+  old_password: '',
+  new_password: '',
+  confirm_password: '',
+})
 
 // 计算属性
 const userInfo = computed(() => authStore.user)
@@ -342,6 +429,102 @@ const handleRealnameSubmit = async (formData: any) => {
     // 更新用户信息
     await authStore.getCurrentUser()
   }
+}
+
+// 用户信息编辑相关
+const handleEditPhone = () => {
+  editPhone.value = userInfo.value?.phone || ''
+  isEditingPhone.value = true
+}
+
+const handleCancelEditPhone = () => {
+  isEditingPhone.value = false
+  editPhone.value = ''
+}
+
+const handleSavePhone = async () => {
+  // 手机号格式验证
+  const phonePattern = /^1[3-9]\d{9}$/
+  if (editPhone.value && !phonePattern.test(editPhone.value)) {
+    ElMessage.error('请输入正确的手机号格式')
+    return
+  }
+
+  try {
+    const updateData: API.UserUpdateSchema = {
+      phone: editPhone.value || null,
+    }
+
+    const response = await updateCurrentUserApiV1UsersMePut(updateData)
+
+    if (response.data?.success) {
+      await authStore.getCurrentUser()
+      isEditingPhone.value = false
+      ElMessage.success('手机号更新成功')
+    } else {
+      ElMessage.error(response.data?.message || '更新失败')
+    }
+  } catch (error) {
+    console.error('Update phone failed:', error)
+    ElMessage.error('更新失败')
+  }
+}
+
+// 密码修改相关
+const validateConfirmPassword = (rule: any, value: string, callback: any) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'))
+  } else if (value !== passwordForm.value.new_password) {
+    callback(new Error('两次输入密码不一致'))
+  } else {
+    callback()
+  }
+}
+
+const passwordRules = ref<FormRules>({
+  old_password: [
+    { required: true, message: '请输入当前密码', trigger: 'blur' },
+    { min: 6, message: '密码长度不能小于6位', trigger: 'blur' },
+  ],
+  new_password: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    { min: 6, message: '密码长度不能小于6位', trigger: 'blur' },
+  ],
+  confirm_password: [
+    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+    { validator: validateConfirmPassword, trigger: 'blur' },
+  ],
+})
+
+const handleChangePassword = async () => {
+  if (!passwordFormRef.value) return
+
+  await passwordFormRef.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        changingPassword.value = true
+        const response = await changePasswordApiV1UsersChangePasswordPost(passwordForm.value)
+
+        if (response.data?.success) {
+          ElMessage.success('密码修改成功')
+          // 清空表单
+          passwordForm.value = {
+            old_password: '',
+            new_password: '',
+            confirm_password: '',
+          }
+          passwordFormRef.value?.resetFields()
+        } else {
+          ElMessage.error(response.data?.message || '密码修改失败')
+        }
+      } catch (error) {
+        console.error('Change password failed:', error)
+        ElMessage.error('密码修改失败')
+      } finally {
+        changingPassword.value = false
+      }
+    }
+  })
 }
 </script>
 
@@ -519,5 +702,25 @@ const handleRealnameSubmit = async (formData: any) => {
 
 :deep(.el-tabs__content) {
   padding: 0;
+}
+
+.phone-display {
+  display: flex;
+  align-items: center;
+}
+
+.phone-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-content {
+  padding: 24px;
+}
+
+.password-form {
+  max-width: 400px;
+  margin: 0 auto;
 }
 </style>

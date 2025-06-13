@@ -104,7 +104,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 // 计算属性
-const userInfo = computed(() => authStore.userInfo)
+const userInfo = computed(() => authStore.user)
 const activeMenu = computed(() => route.path)
 
 // 处理下拉菜单命令
