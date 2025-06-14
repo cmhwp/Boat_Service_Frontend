@@ -52,9 +52,15 @@
               <span>用户管理</span>
             </template>
             <el-menu-item index="/admin/users">用户列表</el-menu-item>
-            <el-menu-item index="/admin/realname">实名认证</el-menu-item>
           </el-sub-menu>
-
+          <el-sub-menu index="qualifications">
+            <template #title>
+              <el-icon><audit /></el-icon>
+              <span>资质管理</span>
+            </template>
+            <el-menu-item index="/admin/realname">实名认证</el-menu-item>
+            <el-menu-item index="/admin/merchantAudit">商家审核</el-menu-item>
+          </el-sub-menu>
           <el-sub-menu index="business">
             <template #title>
               <el-icon><ship /></el-icon>
@@ -94,9 +100,8 @@ import {
   User,
   Setting,
   DataAnalysis,
-  Ship
 } from '@element-plus/icons-vue'
-import { Ship as ShipIcon } from '@icon-park/vue-next'
+import { Ship, Audit } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
@@ -128,6 +133,7 @@ const handleCommand = async (command: string) => {
         router.push('/')
       } catch {
         // 用户取消操作
+
       }
       break
   }

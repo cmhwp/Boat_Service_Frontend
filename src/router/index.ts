@@ -109,6 +109,21 @@ const router = createRouter({
             requiredRole: 'admin',
           },
         },
+        {
+          path: 'realname',
+          name: 'AdminRealname',
+          component: () => import('@/views/admin/realnameView.vue'),
+        },
+        {
+          path: 'merchantAudit',
+          name: 'AdminMerchantAudit',
+          component: () => import('@/views/admin/merchantAduitView.vue'),
+        },
+        {
+          path: 'users',
+          name: 'users',
+          component: () => import("@/views/admin/usersView.vue")
+        }
       ],
     },
 

@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <h1>Dashboard</h1>
-  </div>
+  <h1>
+    实名认证
+  </h1>
 </template>
 <script lang="ts">
-
 
 </script>
