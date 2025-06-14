@@ -468,6 +468,14 @@ declare namespace API {
     page?: number
     /** 每页数量 */
     page_size?: number
+    /** 搜索用户名或邮箱 */
+    search?: string | null
+    /** 用户角色筛选 */
+    role?: UserRole | null
+    /** 实名认证状态筛选 */
+    realname_status?: RealnameStatus | null
+    /** 账户状态筛选 */
+    is_active?: boolean | null
   }
 
   type HTTPValidationError = {

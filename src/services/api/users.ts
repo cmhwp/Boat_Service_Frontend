@@ -2,7 +2,13 @@
 /* eslint-disable */
 import request from '@/utils/request'
 
-/** 获取用户列表 获取用户列表（仅管理员） GET /api/v1/users/ */
+/** 获取用户列表 获取用户列表（仅管理员）
+
+支持以下筛选条件：
+- **search**: 搜索用户名或邮箱
+- **role**: 用户角色筛选 (user, crew, merchant, admin)
+- **realname_status**: 实名认证状态筛选 (unverified, pending, verified)
+- **is_active**: 账户状态筛选 (true/false) GET /api/v1/users/ */
 export async function getUsersListApiV1UsersGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getUsersListApiV1UsersGetParams,
@@ -15,6 +21,7 @@ export async function getUsersListApiV1UsersGet(
       page: '1',
       // page_size has a default value: 10
       page_size: '10',
+
       ...params,
     },
     ...(options || {}),

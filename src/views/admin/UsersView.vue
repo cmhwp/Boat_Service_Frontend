@@ -77,7 +77,38 @@
     <el-card class="table-card" shadow="never">
       <template #header>
         <div class="card-header">
-          <span class="card-title">用户列表</span>
+          <div class="card-title-section">
+            <span class="card-title">用户列表</span>
+            <div class="filter-tags" v-if="hasActiveFilters">
+              <el-tag
+                v-if="searchForm.keyword"
+                size="small"
+                closable
+                @close="clearFilter('keyword')"
+              >
+                搜索: {{ searchForm.keyword }}
+              </el-tag>
+              <el-tag v-if="searchForm.role" size="small" closable @close="clearFilter('role')">
+                角色: {{ getRoleText(searchForm.role) }}
+              </el-tag>
+              <el-tag
+                v-if="searchForm.realnameStatus"
+                size="small"
+                closable
+                @close="clearFilter('realnameStatus')"
+              >
+                实名: {{ getRealnameStatusText(searchForm.realnameStatus) }}
+              </el-tag>
+              <el-tag
+                v-if="searchForm.isActive !== undefined"
+                size="small"
+                closable
+                @close="clearFilter('isActive')"
+              >
+                状态: {{ searchForm.isActive ? '激活' : '禁用' }}
+              </el-tag>
+            </div>
+          </div>
           <div class="card-extra">
             <el-button @click="handleRefresh" :loading="loading">
               <el-icon><refresh /></el-icon>
@@ -241,7 +272,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Refresh, Edit, Delete, User, Switch } from '@element-plus/icons-vue'
 import {
@@ -258,8 +289,8 @@ const userList = ref<API.UserResponseSchema[]>([])
 // 搜索表单
 const searchForm = reactive({
   keyword: '',
-  role: '',
-  realnameStatus: '',
+  role: '' as API.UserRole | '',
+  realnameStatus: '' as API.RealnameStatus | '',
   isActive: undefined as boolean | undefined,
 })
 
@@ -288,6 +319,16 @@ const editDialog = reactive({
 
 const editFormRef = ref()
 
+// 计算属性 - 检查是否有激活的筛选条件
+const hasActiveFilters = computed(() => {
+  return !!(
+    searchForm.keyword ||
+    searchForm.role ||
+    searchForm.realnameStatus ||
+    searchForm.isActive !== undefined
+  )
+})
+
 // 表单验证规则
 const editFormRules = {
   phone: [{ pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }],
@@ -299,9 +340,23 @@ const editFormRules = {
 const fetchUserList = async () => {
   try {
     loading.value = true
-    const params = {
+    const params: API.getUsersListApiV1UsersGetParams = {
       page: pagination.page,
       page_size: pagination.pageSize,
+    }
+
+    // 添加筛选条件
+    if (searchForm.keyword) {
+      params.search = searchForm.keyword
+    }
+    if (searchForm.role) {
+      params.role = searchForm.role as API.UserRole
+    }
+    if (searchForm.realnameStatus) {
+      params.realname_status = searchForm.realnameStatus as API.RealnameStatus
+    }
+    if (searchForm.isActive !== undefined) {
+      params.is_active = searchForm.isActive
     }
 
     const response = await getUsersListApiV1UsersGet(params)
@@ -338,6 +393,25 @@ const handleReset = () => {
 // 刷新列表
 const handleRefresh = () => {
   fetchUserList()
+}
+
+// 清除单个筛选条件
+const clearFilter = (filterType: string) => {
+  switch (filterType) {
+    case 'keyword':
+      searchForm.keyword = ''
+      break
+    case 'role':
+      searchForm.role = ''
+      break
+    case 'realnameStatus':
+      searchForm.realnameStatus = ''
+      break
+    case 'isActive':
+      searchForm.isActive = undefined
+      break
+  }
+  handleSearch()
 }
 
 // 分页处理
@@ -539,13 +613,25 @@ onMounted(() => {
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+}
+
+.card-title-section {
+  flex: 1;
 }
 
 .card-title {
   font-size: 16px;
   font-weight: 600;
   color: #1f2937;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .card-extra {
