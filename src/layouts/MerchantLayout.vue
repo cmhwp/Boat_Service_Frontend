@@ -65,7 +65,7 @@
           </el-sub-menu>
 
           <el-menu-item index="/merchant/routes">
-            <el-icon><map /></el-icon>
+            <el-icon><map-road /></el-icon>
             <span>航线管理</span>
           </el-menu-item>
 
@@ -98,12 +98,10 @@ import {
   ArrowDown,
   Setting,
   DataAnalysis,
-  Ship,
   List,
-  Map,
   Money
 } from '@element-plus/icons-vue'
-import { Ship as ShipIcon } from '@icon-park/vue-next'
+import { Ship, MapRoad} from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
@@ -111,7 +109,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 // 计算属性
-const userInfo = computed(() => authStore.userInfo)
+const userInfo = computed(() => authStore.user)
 const activeMenu = computed(() => route.path)
 
 // 处理下拉菜单命令
