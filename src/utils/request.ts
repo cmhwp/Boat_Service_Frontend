@@ -56,6 +56,7 @@ request.interceptors.response.use(
       ElMessage.success(data.message)
       return response
     }
+    console.log(response)
     return Promise.reject(new Error(data.message || '请求失败'))
   },
   (error) => {

@@ -148,11 +148,11 @@ export const useAuthStore = defineStore('auth', () => {
   const register = async (registerForm: RegisterForm) => {
     loading.value = true
     try {
-      // 先验证邮箱验证码
-      const verifyResult = await verifyEmailCode(registerForm.email, registerForm.verificationCode)
-      if (!verifyResult.success) {
-        return verifyResult
-      }
+      // // 先验证邮箱验证码
+      // const verifyResult = await verifyEmailCode(registerForm.email, registerForm.verificationCode)
+      // if (!verifyResult.success) {
+      //   return verifyResult
+      // }
 
       const response = await completeRegistrationApiV1UsersRegisterPost({
         username: registerForm.username,
@@ -160,7 +160,7 @@ export const useAuthStore = defineStore('auth', () => {
         password: registerForm.password,
         verification_code: registerForm.verificationCode,
       })
-
+      console.log(registerForm)
       if (response.data?.success && response.data?.data) {
         ElMessage.success('注册成功！请登录')
         return { success: true, user: response.data.data }

@@ -100,9 +100,7 @@ export const useRealnameStore = defineStore('realname', () => {
         const requestBody = {
           real_name,
           id_card,
-          front_image: '', // API要求的字符串字段，设为空
-          back_image: '', // API要求的字符串字段，设为空
-        }
+        } as API.BodySubmitRealnameAuthApiV1RealnameAuthSubmitPost
 
         // 将File对象作为独立参数传递
         response = await submitRealnameAuthApiV1RealnameAuthSubmitPost(
