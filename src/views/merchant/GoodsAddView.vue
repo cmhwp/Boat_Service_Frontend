@@ -109,13 +109,10 @@
             <div class="upload-container">
               <el-upload
                 ref="uploadRef"
-                :action="uploadAction"
-                :headers="uploadHeaders"
                 :file-list="fileList"
-                :on-success="handleUploadSuccess"
-                :on-error="handleUploadError"
                 :on-remove="handleRemove"
                 :before-upload="beforeUpload"
+                :http-request="handleManualUpload"
                 list-type="picture-card"
                 accept="image/*"
                 :limit="10"
@@ -157,7 +154,6 @@ import {
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
-const authStore = useAuthStore()
 
 // 表单引用
 const formRef = ref<FormInstance>()
@@ -179,12 +175,6 @@ const fileList = ref<UploadUserFile[]>([])
 
 // 提交状态
 const submitLoading = ref(false)
-
-// 上传配置
-const uploadAction = computed(() => '/api/v1/products/upload-image')
-const uploadHeaders = computed(() => ({
-  Authorization: `Bearer ${authStore.token}`,
-}))
 
 // 表单验证规则
 const rules: FormRules = {
@@ -226,37 +216,37 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
   return true
 }
 
-// 上传成功处理
-const handleUploadSuccess: UploadProps['onSuccess'] = (response, file) => {
-  if (response.data.success && response.data.data?.url) {
-    form.images = form.images || []
-    form.images.push(response.data.data.url)
-    ElMessage.success('图片上传成功')
-  } else {
-    ElMessage.error('图片上传失败')
-    // 从文件列表中移除失败的文件
-    const index = fileList.value.findIndex((f) => f.uid === file.uid)
-    if (index > -1) {
-      fileList.value.splice(index, 1)
-    }
-  }
-}
+// 手动上传处理
+const handleManualUpload = async (options: any) => {
+  try {
+    const response = await uploadProductImageApiV1ProductsUploadImagePost(
+      { file: options.file },
+      options.file,
+    )
 
-// 上传失败处理
-const handleUploadError: UploadProps['onError'] = (error, file) => {
-  console.error('图片上传失败:', error)
-  ElMessage.error('图片上传失败，请重试')
-  // 从文件列表中移除失败的文件
-  const index = fileList.value.findIndex((f) => f.uid === file.uid)
-  if (index > -1) {
-    fileList.value.splice(index, 1)
+    if (response.data.success && response.data.data?.url) {
+      form.images = form.images || []
+      form.images.push(response.data.data.url)
+
+      // 更新文件状态为成功
+      options.onSuccess(response.data, options.file)
+      ElMessage.success('图片上传成功')
+    } else {
+      options.onError(new Error('上传失败'), options.file)
+      ElMessage.error('图片上传失败')
+    }
+  } catch (error) {
+    console.error('图片上传失败:', error)
+    options.onError(error, options.file)
+    ElMessage.error('图片上传失败，请重试')
   }
 }
 
 // 移除图片处理
 const handleRemove: UploadProps['onRemove'] = (file) => {
-  if (file.response?.data?.data?.url) {
-    const url = file.response.data.data.url
+  const response = file.response as any
+  if (response?.data?.url) {
+    const url = response.data.url
     const index = form.images?.indexOf(url)
     if (index !== undefined && index > -1) {
       form.images?.splice(index, 1)
