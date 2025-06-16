@@ -155,6 +155,36 @@ const router = createRouter({
           name: 'MerchantCrew',
           component: () => import('@/views/merchant/CrewView.vue'),
         },
+        {
+          path: 'boats',
+          name: 'MerchantBoats',
+          component: () => import('@/views/merchant/BoatsView.vue'),
+          meta: {
+            title: '我的船艇 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
+        {
+          path: 'boats/add',
+          name: 'MerchantBoatAdd',
+          component: () => import('@/views/merchant/BoatAddView.vue'),
+          meta: {
+            title: '添加船艇 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
+        {
+          path: 'boats/edit/:id',
+          name: 'MerchantBoatEdit',
+          component: () => import('@/views/merchant/BoatEditView.vue'),
+          meta: {
+            title: '编辑船艇 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
       ],
     },
 
