@@ -185,6 +185,36 @@ const router = createRouter({
             requiredRole: 'merchant',
           },
         },
+        {
+          path: 'goods',
+          name: 'MerchantGoods',
+          component: () => import('@/views/merchant/GoodsView.vue'),
+          meta: {
+            title: '商品列表 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
+        {
+          path: 'goods/add',
+          name: 'MerchantGoodsAdd',
+          component: () => import('@/views/merchant/GoodsAddView.vue'),
+          meta: {
+            title: '添加商品 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
+        {
+          path: 'goods/edit/:id',
+          name: 'MerchantGoodsEdit',
+          component: () => import('@/views/merchant/GoodsEditView.vue'),
+          meta: {
+            title: '编辑商品 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
       ],
     },
 

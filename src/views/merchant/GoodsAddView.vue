@@ -1,22 +1,17 @@
 <template>
-  <div class="boat-edit-view">
+  <div class="goods-add-view">
     <!-- 页面头部 -->
     <div class="page-header">
       <el-breadcrumb>
         <el-breadcrumb-item to="/merchant/dashboard">管理台</el-breadcrumb-item>
-        <el-breadcrumb-item to="/merchant/boats">我的船艇</el-breadcrumb-item>
-        <el-breadcrumb-item>编辑船艇</el-breadcrumb-item>
+        <el-breadcrumb-item to="/merchant/goods">商品列表</el-breadcrumb-item>
+        <el-breadcrumb-item>添加商品</el-breadcrumb-item>
       </el-breadcrumb>
-      <h1 class="page-title">编辑船艇</h1>
-    </div>
-
-    <!-- 加载状态 -->
-    <div v-if="loading" class="loading-container">
-      <el-skeleton :rows="8" animated />
+      <h1 class="page-title">添加商品</h1>
     </div>
 
     <!-- 表单内容 -->
-    <div v-else-if="boat" class="form-container">
+    <div class="form-container">
       <el-form
         ref="formRef"
         :model="form"
@@ -32,94 +27,73 @@
 
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item label="船艇名称" prop="name" required>
+              <el-form-item label="商品名称" prop="name" required>
                 <el-input
                   v-model="form.name"
-                  placeholder="请输入船艇名称"
+                  placeholder="请输入商品名称"
                   maxlength="100"
                   show-word-limit
                 />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="证书号" prop="license_number">
-                <el-input v-model="boat.license_number" placeholder="证书号" disabled />
-                <span class="form-help">证书号不可修改</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item label="船艇类型" prop="boat_type" required>
-                <el-select
-                  v-model="form.boat_type"
-                  placeholder="请选择船艇类型"
-                  style="width: 100%"
-                >
-                  <el-option label="客运船" value="passenger" />
-                  <el-option label="观光船" value="sightseeing" />
-                  <el-option label="钓鱼船" value="fishing" />
+              <el-form-item label="商品分类" prop="category" required>
+                <el-select v-model="form.category" placeholder="请选择商品分类" style="width: 100%">
+                  <el-option label="水果" value="fruit" />
+                  <el-option label="蔬菜" value="vegetable" />
+                  <el-option label="粮食" value="grain" />
+                  <el-option label="海鲜" value="seafood" />
+                  <el-option label="其他" value="other" />
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="载客量" prop="capacity" required>
-                <el-input-number
-                  v-model="form.capacity"
-                  :min="1"
-                  :max="100"
-                  placeholder="请输入载客量"
-                  style="width: 100%"
-                />
-                <span class="form-help">单位：人</span>
-              </el-form-item>
-            </el-col>
           </el-row>
 
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item label="小时费率" prop="hourly_rate" required>
+              <el-form-item label="商品价格" prop="price" required>
                 <el-input-number
-                  v-model="form.hourly_rate"
+                  v-model="form.price"
                   :min="0"
                   :precision="2"
-                  placeholder="请输入小时费率"
+                  placeholder="请输入商品价格"
                   style="width: 100%"
                 />
-                <span class="form-help">单位：元/小时</span>
+                <span class="form-help">单位：元</span>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="当前位置" prop="current_location">
-                <el-input
-                  v-model="form.current_location"
-                  placeholder="请输入当前位置"
-                  maxlength="200"
+              <el-form-item label="库存数量" prop="stock" required>
+                <el-input-number
+                  v-model="form.stock"
+                  :min="0"
+                  :max="99999"
+                  placeholder="请输入库存数量"
+                  style="width: 100%"
                 />
+                <span class="form-help">大于等于0</span>
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item label="状态" prop="status" required>
-                <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
-                  <el-option label="可用" value="available" />
-                  <el-option label="维护中" value="maintenance" />
-                  <el-option label="停用" value="inactive" />
-                </el-select>
-                <span class="form-help">使用中状态由系统自动管理</span>
+              <el-form-item label="计量单位" prop="unit" required>
+                <el-input
+                  v-model="form.unit"
+                  placeholder="请输入计量单位，如：斤、个、袋等"
+                  maxlength="10"
+                />
               </el-form-item>
             </el-col>
           </el-row>
 
-          <el-form-item label="船艇描述" prop="description">
+          <el-form-item label="商品描述" prop="description">
             <el-input
               v-model="form.description"
               type="textarea"
               :rows="4"
-              placeholder="请输入船艇描述信息，包括设施、特色等"
+              placeholder="请输入商品描述信息，包括特色、产地、品质等"
               maxlength="500"
               show-word-limit
             />
@@ -128,7 +102,7 @@
 
         <el-card class="form-card" shadow="never">
           <template #header>
-            <h3>船艇图片</h3>
+            <h3>商品图片</h3>
           </template>
 
           <el-form-item label="上传图片" prop="images">
@@ -150,7 +124,7 @@
                 <template #tip>
                   <div class="upload-tip">
                     <p>支持 jpg、jpeg、png、gif、webp 格式，单张图片不超过 10MB</p>
-                    <p>最多可上传 10 张图片，建议上传清晰的船艇照片</p>
+                    <p>最多可上传 10 张图片，建议上传清晰的商品照片</p>
                   </div>
                 </template>
               </el-upload>
@@ -162,70 +136,52 @@
         <div class="form-actions">
           <el-button size="large" @click="handleCancel">取消</el-button>
           <el-button type="primary" size="large" :loading="submitLoading" @click="handleSubmit">
-            {{ submitLoading ? '保存中...' : '保存修改' }}
+            {{ submitLoading ? '创建中...' : '创建商品' }}
           </el-button>
         </div>
       </el-form>
-    </div>
-
-    <!-- 数据加载失败 -->
-    <div v-else class="error-state">
-      <el-result icon="error" title="加载失败" sub-title="无法加载船艇信息，请检查网络连接">
-        <template #extra>
-          <el-button type="primary" @click="fetchBoatDetail">重新加载</el-button>
-          <el-button @click="handleCancel">返回列表</el-button>
-        </template>
-      </el-result>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, reactive, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules, UploadProps, UploadUserFile } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import {
-  getMyBoatDetailApiV1BoatsMyBoatIdGet,
-  updateMyBoatApiV1BoatsMyBoatIdPut,
-  uploadBoatImageApiV1BoatsUploadImagePost,
-} from '@/services/api/boats'
+  createProductApiV1ProductsPost,
+  uploadProductImageApiV1ProductsUploadImagePost,
+} from '@/services/api/products'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
-const route = useRoute()
 const authStore = useAuthStore()
-
-// 获取路由参数中的船艇ID
-const boatId = computed(() => Number(route.params.id))
 
 // 表单引用
 const formRef = ref<FormInstance>()
 const uploadRef = ref()
 
-// 响应式数据
-const loading = ref(false)
-const submitLoading = ref(false)
-const boat = ref<API.BoatDetailSchema | null>(null)
-
 // 表单数据
-const form = reactive<API.BoatUpdateSchema>({
+const form = reactive<API.ProductCreateSchema>({
   name: '',
-  boat_type: 'sightseeing',
-  capacity: 10,
-  hourly_rate: 100,
+  category: 'other',
   description: '',
-  current_location: '',
-  status: 'available',
+  price: 0,
+  stock: 0,
+  unit: '份',
   images: [],
 })
 
 // 文件列表
 const fileList = ref<UploadUserFile[]>([])
 
+// 提交状态
+const submitLoading = ref(false)
+
 // 上传配置
-const uploadAction = computed(() => '/api/v1/boats/upload-image')
+const uploadAction = computed(() => '/api/v1/products/upload-image')
 const uploadHeaders = computed(() => ({
   Authorization: `Bearer ${authStore.token}`,
 }))
@@ -233,58 +189,22 @@ const uploadHeaders = computed(() => ({
 // 表单验证规则
 const rules: FormRules = {
   name: [
-    { required: true, message: '请输入船艇名称', trigger: 'blur' },
-    { min: 2, max: 100, message: '船艇名称长度在 2 到 100 个字符', trigger: 'blur' },
+    { required: true, message: '请输入商品名称', trigger: 'blur' },
+    { min: 2, max: 100, message: '商品名称长度在 2 到 100 个字符', trigger: 'blur' },
   ],
-  boat_type: [{ required: true, message: '请选择船艇类型', trigger: 'change' }],
-  capacity: [
-    { required: true, message: '请输入载客量', trigger: 'blur' },
-    { type: 'number', min: 1, max: 100, message: '载客量必须在 1 到 100 之间', trigger: 'blur' },
+  category: [{ required: true, message: '请选择商品分类', trigger: 'change' }],
+  price: [
+    { required: true, message: '请输入商品价格', trigger: 'blur' },
+    { type: 'number', min: 0, message: '商品价格必须大于 0', trigger: 'blur' },
   ],
-  hourly_rate: [
-    { required: true, message: '请输入小时费率', trigger: 'blur' },
-    { type: 'number', min: 0, message: '小时费率必须大于 0', trigger: 'blur' },
+  stock: [
+    { required: true, message: '请输入库存数量', trigger: 'blur' },
+    { type: 'number', min: 0, message: '库存数量不能小于 0', trigger: 'blur' },
   ],
-  status: [{ required: true, message: '请选择状态', trigger: 'change' }],
-}
-
-// 获取船艇详情
-const fetchBoatDetail = async () => {
-  try {
-    loading.value = true
-    const response = await getMyBoatDetailApiV1BoatsMyBoatIdGet({ boat_id: boatId.value })
-
-    if (response.data.success && response.data) {
-      boat.value = response.data.data ?? null
-
-      // 填充表单数据
-      form.name = response.data.data?.name
-      form.boat_type = response.data.data?.boat_type
-      form.capacity = response.data.data?.capacity
-      form.hourly_rate = response.data.data?.hourly_rate
-      form.description = response.data.data?.description
-      form.current_location = response.data.data?.current_location
-      form.status = response.data.data?.status
-      form.images = response.data.data?.images || []
-
-      // 设置文件列表
-      if (response.data.data?.images && response.data.data?.images.length > 0) {
-        fileList.value = response.data.data?.images.map((url, index) => ({
-          name: `image-${index}`,
-          url: url,
-          uid: -index - 1,
-          status: 'success',
-        }))
-      }
-    } else {
-      ElMessage.error('获取船艇信息失败')
-    }
-  } catch (error) {
-    console.error('获取船艇详情失败:', error)
-    ElMessage.error('获取船艇信息失败')
-  } finally {
-    loading.value = false
-  }
+  unit: [
+    { required: true, message: '请输入计量单位', trigger: 'blur' },
+    { min: 1, max: 10, message: '计量单位长度在 1 到 10 个字符', trigger: 'blur' },
+  ],
 }
 
 // 上传前校验
@@ -308,9 +228,9 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
 
 // 上传成功处理
 const handleUploadSuccess: UploadProps['onSuccess'] = (response, file) => {
-  if (response.success && response.data?.url) {
+  if (response.data.success && response.data.data?.url) {
     form.images = form.images || []
-    form.images.push(response.data.url)
+    form.images.push(response.data.data.url)
     ElMessage.success('图片上传成功')
   } else {
     ElMessage.error('图片上传失败')
@@ -335,15 +255,9 @@ const handleUploadError: UploadProps['onError'] = (error, file) => {
 
 // 移除图片处理
 const handleRemove: UploadProps['onRemove'] = (file) => {
-  if (file.response?.data.data.url) {
-    const url = file.response.data.url
+  if (file.response?.data?.data?.url) {
+    const url = file.response.data.data.url
     const index = form.images?.indexOf(url)
-    if (index !== undefined && index > -1) {
-      form.images?.splice(index, 1)
-    }
-  } else if (file.url) {
-    // 移除已存在的图片
-    const index = form.images?.indexOf(file.url)
     if (index !== undefined && index > -1) {
       form.images?.splice(index, 1)
     }
@@ -357,7 +271,7 @@ const handleSubmit = async () => {
   try {
     await formRef.value.validate()
 
-    await ElMessageBox.confirm('确定要保存修改吗？', '确认保存', {
+    await ElMessageBox.confirm('确定要创建这个商品吗？', '确认创建', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'info',
@@ -365,18 +279,18 @@ const handleSubmit = async () => {
 
     submitLoading.value = true
 
-    const response = await updateMyBoatApiV1BoatsMyBoatIdPut({ boat_id: boatId.value }, form)
+    const response = await createProductApiV1ProductsPost(form)
 
     if (response.data.success) {
-      ElMessage.success('船艇信息更新成功')
-      router.push('/merchant/boats')
+      ElMessage.success('商品创建成功')
+      router.push('/merchant/goods')
     } else {
-      ElMessage.error(response.data.message || '更新失败')
+      ElMessage.error(response.data.message || '创建失败')
     }
   } catch (error: any) {
     if (error !== 'cancel') {
-      console.error('更新船艇失败:', error)
-      ElMessage.error('更新失败，请检查网络连接')
+      console.error('创建商品失败:', error)
+      ElMessage.error('创建失败，请检查网络连接')
     }
   } finally {
     submitLoading.value = false
@@ -386,30 +300,20 @@ const handleSubmit = async () => {
 // 取消操作
 const handleCancel = async () => {
   try {
-    await ElMessageBox.confirm('确定要取消吗？未保存的修改将丢失', '确认取消', {
+    await ElMessageBox.confirm('确定要取消吗？未保存的数据将丢失', '确认取消', {
       confirmButtonText: '确定',
       cancelButtonText: '继续编辑',
       type: 'warning',
     })
-    router.push('/merchant/boats')
+    router.push('/merchant/goods')
   } catch {
     // 用户取消操作
   }
 }
-
-// 页面加载时获取数据
-onMounted(() => {
-  if (boatId.value) {
-    fetchBoatDetail()
-  } else {
-    ElMessage.error('无效的船艇ID')
-    router.push('/merchant/boats')
-  }
-})
 </script>
 
 <style scoped>
-.boat-edit-view {
+.goods-add-view {
   background: #fff;
   border-radius: 8px;
   padding: 24px;
@@ -424,10 +328,6 @@ onMounted(() => {
   font-size: 24px;
   font-weight: 600;
   color: #1f2937;
-}
-
-.loading-container {
-  margin-top: 24px;
 }
 
 .form-container {
@@ -500,13 +400,9 @@ onMounted(() => {
   margin: 0 8px;
 }
 
-.error-state {
-  margin-top: 48px;
-}
-
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .boat-edit-view {
+  .goods-add-view {
     padding: 16px;
   }
 

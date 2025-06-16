@@ -13,11 +13,7 @@
       <div class="header-right">
         <el-dropdown @command="handleCommand">
           <span class="user-info">
-            <el-avatar
-              :size="32"
-              :src="userInfo?.avatar || undefined"
-              :icon="User"
-            />
+            <el-avatar :size="32" :src="userInfo?.avatar || undefined" :icon="User" />
             <span class="username">{{ userInfo?.username || '商家' }}</span>
             <el-icon class="dropdown-arrow"><arrow-down /></el-icon>
           </span>
@@ -36,11 +32,7 @@
     <el-container class="merchant-container">
       <!-- 侧边导航栏 -->
       <el-aside class="merchant-aside" width="250px">
-        <el-menu
-          :default-active="activeMenu"
-          class="merchant-menu"
-          router
-        >
+        <el-menu :default-active="activeMenu" class="merchant-menu" router>
           <el-menu-item index="/merchant/dashboard">
             <el-icon><data-analysis /></el-icon>
             <span>经营概况</span>
@@ -55,7 +47,14 @@
             <el-menu-item index="/merchant/boats/add">添加船艇</el-menu-item>
             <el-menu-item index="/merchant/crew">船员审核</el-menu-item>
           </el-sub-menu>
-
+          <el-sub-menu index="goods">
+            <template #title>
+              <el-icon><Commodity /></el-icon>
+              <span>商品管理</span>
+            </template>
+            <el-menu-item index="/merchant/goods">商品列表</el-menu-item>
+            <el-menu-item index="/merchant/goods/add">添加商品</el-menu-item>
+          </el-sub-menu>
           <el-sub-menu index="orders">
             <template #title>
               <el-icon><list /></el-icon>
@@ -94,15 +93,8 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {
-  UserFilled,
-  ArrowDown,
-  Setting,
-  DataAnalysis,
-  List,
-  Money
-} from '@element-plus/icons-vue'
-import { Ship, MapRoad, User,Worker } from '@icon-park/vue-next'
+import { UserFilled, ArrowDown, Setting, DataAnalysis, List } from '@element-plus/icons-vue'
+import { Ship, MapRoad, User, Commodity } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
@@ -127,7 +119,7 @@ const handleCommand = async (command: string) => {
         await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         })
         authStore.logout()
         ElMessage.success('已退出登录')
