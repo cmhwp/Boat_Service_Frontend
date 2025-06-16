@@ -1,4 +1,24 @@
 declare namespace API {
+  type ApiResponseBoatDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: BoatDetailSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseBoatResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: BoatResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponseCrewApplicationResponseSchema_ = {
     /** Code */
     code: number
@@ -101,6 +121,16 @@ declare namespace API {
     success: boolean
   }
 
+  type ApiResponsePaginatedDataBoatListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataBoatListItemSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponsePaginatedDataCrewApplicationDetailSchema_ = {
     /** Code */
     code: number
@@ -131,6 +161,16 @@ declare namespace API {
     success: boolean
   }
 
+  type ApiResponsePaginatedDataProductListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataProductListItemSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponsePaginatedDataRealnameAuthListItemSchema_ = {
     /** Code */
     code: number
@@ -145,6 +185,26 @@ declare namespace API {
     /** Code */
     code: number
     data?: PaginatedDataUserResponseSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseProductDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: ProductDetailSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseProductResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: ProductResponseSchema | null
     /** Message */
     message: string
     /** Success */
@@ -193,6 +253,138 @@ declare namespace API {
 
   type AuditResult = 'approved' | 'rejected'
 
+  type BoatCreateSchema = {
+    /** Name 船只名称 */
+    name: string
+    /** License Number 船只证书号 */
+    license_number: string
+    /** 船只类型 */
+    boat_type?: BoatType
+    /** Capacity 载客量 */
+    capacity: number
+    /** Hourly Rate 小时费率 */
+    hourly_rate: number | string
+    /** Description 船只描述 */
+    description?: string | null
+    /** Images 船只图片列表 */
+    images?: string[] | null
+    /** Current Location 当前位置 */
+    current_location?: string | null
+  }
+
+  type BoatDetailSchema = {
+    /** Id 船只ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 船只名称 */
+    name: string
+    /** License Number 船只证书号 */
+    license_number: string
+    /** 船只类型 */
+    boat_type: BoatType
+    /** Capacity 载客量 */
+    capacity: number
+    /** Hourly Rate 小时费率 */
+    hourly_rate: number
+    /** Description 船只描述 */
+    description?: string | null
+    /** Images 船只图片列表 */
+    images?: string[]
+    /** 状态 */
+    status: BoatStatus
+    /** Current Location 当前位置 */
+    current_location?: string | null
+    /** Created At 创建时间 */
+    created_at: string
+    /** Updated At 更新时间 */
+    updated_at: string
+    /** Merchant 商家信息 */
+    merchant?: Record<string, any> | null
+  }
+
+  type BoatListItemSchema = {
+    /** Id 船只ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 船只名称 */
+    name: string
+    /** 船只类型 */
+    boat_type: BoatType
+    /** Capacity 载客量 */
+    capacity: number
+    /** Hourly Rate 小时费率 */
+    hourly_rate: number
+    /** 状态 */
+    status: BoatStatus
+    /** Current Location 当前位置 */
+    current_location?: string | null
+    /** Images 船只图片列表 */
+    images?: string[]
+    /** Created At 创建时间 */
+    created_at: string
+  }
+
+  type BoatResponseSchema = {
+    /** Id 船只ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 船只名称 */
+    name: string
+    /** License Number 船只证书号 */
+    license_number: string
+    /** 船只类型 */
+    boat_type: BoatType
+    /** Capacity 载客量 */
+    capacity: number
+    /** Hourly Rate 小时费率 */
+    hourly_rate: number
+    /** Description 船只描述 */
+    description?: string | null
+    /** Images 船只图片列表 */
+    images?: string[]
+    /** 状态 */
+    status: BoatStatus
+    /** Current Location 当前位置 */
+    current_location?: string | null
+    /** Created At 创建时间 */
+    created_at: string
+    /** Updated At 更新时间 */
+    updated_at: string
+  }
+
+  type BoatStatus = 'available' | 'in_use' | 'maintenance' | 'inactive'
+
+  type BoatStatusUpdateSchema = {
+    /** 状态 */
+    status: BoatStatus
+    /** Current Location 当前位置 */
+    current_location?: string | null
+  }
+
+  type BoatType = 'passenger' | 'sightseeing' | 'fishing'
+
+  type BoatUpdateSchema = {
+    /** Name 船只名称 */
+    name?: string | null
+    /** 船只类型 */
+    boat_type?: BoatType | null
+    /** Capacity 载客量 */
+    capacity?: number | null
+    /** Hourly Rate 小时费率 */
+    hourly_rate?: number | string | null
+    /** Description 船只描述 */
+    description?: string | null
+    /** Images 船只图片列表 */
+    images?: string[] | null
+    /** Current Location 当前位置 */
+    current_location?: string | null
+    /** 状态 */
+    status?: BoatStatus | null
+  }
+
   type BodySubmitRealnameAuthApiV1RealnameAuthSubmitPost = {
     /** Real Name 真实姓名 */
     real_name: string
@@ -220,6 +412,11 @@ declare namespace API {
     file: string
   }
 
+  type BodyUploadBoatImageApiV1BoatsUploadImagePost = {
+    /** File 船只图片文件 */
+    file: string
+  }
+
   type BodyUploadIdCardImagesApiV1RealnameAuthUploadImagesPost = {
     /** Front Image 身份证正面照片 */
     front_image?: string | null
@@ -229,6 +426,11 @@ declare namespace API {
 
   type BodyUploadMerchantLicenseApiV1MerchantsUploadLicensePost = {
     /** File 营业执照图片文件 */
+    file: string
+  }
+
+  type BodyUploadProductImageApiV1ProductsUploadImagePost = {
+    /** File 商品图片文件 */
     file: string
   }
 
@@ -377,6 +579,16 @@ declare namespace API {
     rating?: number | null
   }
 
+  type deleteMyBoatApiV1BoatsMyBoatIdDeleteParams = {
+    /** 船只ID */
+    boat_id: number
+  }
+
+  type deleteMyProductApiV1ProductsMyProductIdDeleteParams = {
+    /** 商品ID */
+    product_id: number
+  }
+
   type deleteRealnameAuthApiV1RealnameAuthAuthIdDeleteParams = {
     auth_id: number
   }
@@ -390,11 +602,29 @@ declare namespace API {
     email: string
   }
 
+  type getAvailableBoatsApiV1BoatsAvailableGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 船只类型过滤 */
+    boat_type?: BoatType | null
+    /** 最小载客量 */
+    min_capacity?: number | null
+    /** 最大小时费率 */
+    max_hourly_rate?: number | null
+  }
+
   type getAvailableMerchantsApiV1CrewMerchantsGetParams = {
     /** 页码 */
     page?: number
     /** 每页数量 */
     page_size?: number
+  }
+
+  type getBoatDetailApiV1BoatsBoatIdGetParams = {
+    /** 船只ID */
+    boat_id: number
   }
 
   type getCrewApplicationsApiV1CrewApplicationsGetParams = {
@@ -432,6 +662,20 @@ declare namespace API {
     status?: MerchantStatus | null
   }
 
+  type getMyBoatDetailApiV1BoatsMyBoatIdGetParams = {
+    /** 船只ID */
+    boat_id: number
+  }
+
+  type getMyBoatsApiV1BoatsMyGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 状态过滤 */
+    status?: BoatStatus | null
+  }
+
   type getMyCrewApplicationsApiV1CrewMyApplicationsGetParams = {
     /** 页码 */
     page?: number
@@ -439,7 +683,44 @@ declare namespace API {
     page_size?: number
   }
 
+  type getMyProductDetailApiV1ProductsMyProductIdGetParams = {
+    /** 商品ID */
+    product_id: number
+  }
+
+  type getMyProductsApiV1ProductsMyGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 状态过滤 */
+    status?: ProductStatus | null
+    /** 分类过滤 */
+    category?: ProductCategory | null
+  }
+
   type getPendingMerchantsApiV1MerchantsPendingGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+  }
+
+  type getPopularProductsApiV1ProductsPopularGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+  }
+
+  type getProductDetailApiV1ProductsProductIdGetParams = {
+    /** 商品ID */
+    product_id: number
+  }
+
+  type getProductsByCategoryApiV1ProductsCategoryCategoryGetParams = {
+    /** 商品分类 */
+    category: ProductCategory
     /** 页码 */
     page?: number
     /** 每页数量 */
@@ -622,6 +903,19 @@ declare namespace API {
     description?: string | null
   }
 
+  type PaginatedDataBoatListItemSchema_ = {
+    /** Items */
+    items: BoatListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
   type PaginatedDataCrewApplicationDetailSchema_ = {
     /** Items */
     items: CrewApplicationDetailSchema[]
@@ -661,6 +955,19 @@ declare namespace API {
     total_pages: number
   }
 
+  type PaginatedDataProductListItemSchema_ = {
+    /** Items */
+    items: ProductListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
   type PaginatedDataRealnameAuthListItemSchema_ = {
     /** Items */
     items: RealnameAuthListItemSchema[]
@@ -685,6 +992,144 @@ declare namespace API {
     page_size: number
     /** Total Pages */
     total_pages: number
+  }
+
+  type ProductCategory = 'fruit' | 'vegetable' | 'grain' | 'seafood' | 'other'
+
+  type ProductCreateSchema = {
+    /** Name 商品名称 */
+    name: string
+    /** 商品分类 */
+    category?: ProductCategory
+    /** Description 商品描述 */
+    description?: string | null
+    /** Price 商品价格 */
+    price: number | string
+    /** Stock 库存数量 */
+    stock: number
+    /** Unit 计量单位 */
+    unit?: string
+    /** Images 商品图片列表 */
+    images?: string[] | null
+  }
+
+  type ProductDetailSchema = {
+    /** Id 商品ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 商品名称 */
+    name: string
+    /** 商品分类 */
+    category: ProductCategory
+    /** Description 商品描述 */
+    description?: string | null
+    /** Price 商品价格 */
+    price: number
+    /** Stock 库存数量 */
+    stock: number
+    /** Unit 计量单位 */
+    unit: string
+    /** Images 商品图片列表 */
+    images?: string[]
+    /** Rating 评分 */
+    rating: number
+    /** Sales Count 销售数量 */
+    sales_count: number
+    /** 状态 */
+    status: ProductStatus
+    /** Created At 创建时间 */
+    created_at: string
+    /** Updated At 更新时间 */
+    updated_at: string
+    /** Merchant 商家信息 */
+    merchant?: Record<string, any> | null
+  }
+
+  type ProductListItemSchema = {
+    /** Id 商品ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 商品名称 */
+    name: string
+    /** 商品分类 */
+    category: ProductCategory
+    /** Price 商品价格 */
+    price: number
+    /** Stock 库存数量 */
+    stock: number
+    /** Unit 计量单位 */
+    unit: string
+    /** Images 商品图片列表 */
+    images?: string[]
+    /** Rating 评分 */
+    rating: number
+    /** Sales Count 销售数量 */
+    sales_count: number
+    /** 状态 */
+    status: ProductStatus
+    /** Created At 创建时间 */
+    created_at: string
+  }
+
+  type ProductResponseSchema = {
+    /** Id 商品ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 商品名称 */
+    name: string
+    /** 商品分类 */
+    category: ProductCategory
+    /** Description 商品描述 */
+    description?: string | null
+    /** Price 商品价格 */
+    price: number
+    /** Stock 库存数量 */
+    stock: number
+    /** Unit 计量单位 */
+    unit: string
+    /** Images 商品图片列表 */
+    images?: string[]
+    /** Rating 评分 */
+    rating: number
+    /** Sales Count 销售数量 */
+    sales_count: number
+    /** 状态 */
+    status: ProductStatus
+    /** Created At 创建时间 */
+    created_at: string
+    /** Updated At 更新时间 */
+    updated_at: string
+  }
+
+  type ProductStatus = 'available' | 'sold_out' | 'inactive'
+
+  type ProductStockUpdateSchema = {
+    /** Stock 库存数量 */
+    stock: number
+    /** 状态 */
+    status?: ProductStatus | null
+  }
+
+  type ProductUpdateSchema = {
+    /** Name 商品名称 */
+    name?: string | null
+    /** 商品分类 */
+    category?: ProductCategory | null
+    /** Description 商品描述 */
+    description?: string | null
+    /** Price 商品价格 */
+    price?: number | string | null
+    /** Stock 库存数量 */
+    stock?: number | null
+    /** Unit 计量单位 */
+    unit?: string | null
+    /** Images 商品图片列表 */
+    images?: string[] | null
+    /** 状态 */
+    status?: ProductStatus | null
   }
 
   type RealnameAuthListItemSchema = {
@@ -744,13 +1189,50 @@ declare namespace API {
     confirm_password: string
   }
 
+  type searchProductsApiV1ProductsSearchGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 搜索关键词 */
+    keyword?: string | null
+    /** 商品分类 */
+    category?: ProductCategory | null
+    /** 最低价格 */
+    min_price?: number | null
+    /** 最高价格 */
+    max_price?: number | null
+    /** 商家ID */
+    merchant_id?: number | null
+  }
+
   type SendVerificationCodeSchema = {
     /** Email */
     email: string
   }
 
+  type updateBoatStatusApiV1BoatsMyBoatIdStatusPatchParams = {
+    /** 船只ID */
+    boat_id: number
+  }
+
   type updateCrewApiV1CrewCrewIdPutParams = {
     crew_id: number
+  }
+
+  type updateMyBoatApiV1BoatsMyBoatIdPutParams = {
+    /** 船只ID */
+    boat_id: number
+  }
+
+  type updateMyProductApiV1ProductsMyProductIdPutParams = {
+    /** 商品ID */
+    product_id: number
+  }
+
+  type updateProductStockApiV1ProductsMyProductIdStockPatchParams = {
+    /** 商品ID */
+    product_id: number
   }
 
   type updateRealnameAuthStatusApiV1RealnameAuthAuthIdStatusPutParams = {

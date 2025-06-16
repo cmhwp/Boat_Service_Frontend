@@ -112,18 +112,18 @@ const router = createRouter({
         {
           path: 'realname',
           name: 'AdminRealname',
-          component: () => import('@/views/admin/realnameView.vue'),
+          component: () => import('@/views/admin/RealNameView.vue'),
         },
         {
           path: 'merchantAudit',
           name: 'AdminMerchantAudit',
-          component: () => import('@/views/admin/merchantAduitView.vue'),
+          component: () => import('@/views/admin/MerchantAduitView.vue'),
         },
         {
           path: 'users',
-          name: 'users',
-          component: () => import("@/views/admin/usersView.vue")
-        }
+          name: 'AdminUsers',
+          component: () => import('@/views/admin/UsersView.vue'),
+        },
       ],
     },
 
@@ -149,6 +149,11 @@ const router = createRouter({
             requiresAuth: true,
             requiredRole: 'merchant',
           },
+        },
+        {
+          path: 'crew',
+          name: 'MerchantCrew',
+          component: () => import('@/views/merchant/CrewView.vue'),
         },
       ],
     },

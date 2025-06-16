@@ -16,7 +16,7 @@
             <el-avatar
               :size="32"
               :src="userInfo?.avatar || undefined"
-              :icon="UserFilled"
+              :icon="User"
             />
             <span class="username">{{ userInfo?.username || '商家' }}</span>
             <el-icon class="dropdown-arrow"><arrow-down /></el-icon>
@@ -53,6 +53,7 @@
             </template>
             <el-menu-item index="/merchant/boats">我的船艇</el-menu-item>
             <el-menu-item index="/merchant/boats/add">添加船艇</el-menu-item>
+            <el-menu-item index="/merchant/crew">船员审核</el-menu-item>
           </el-sub-menu>
 
           <el-sub-menu index="orders">
@@ -101,7 +102,7 @@ import {
   List,
   Money
 } from '@element-plus/icons-vue'
-import { Ship, MapRoad} from '@icon-park/vue-next'
+import { Ship, MapRoad, User,Worker } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()

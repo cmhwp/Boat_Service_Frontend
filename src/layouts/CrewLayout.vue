@@ -16,7 +16,7 @@
             <el-avatar
               :size="32"
               :src="userInfo?.avatar || undefined"
-              :icon="UserFilled"
+              :icon="User"
             />
             <span class="username">{{ userInfo?.username || '船员' }}</span>
             <el-icon class="dropdown-arrow"><arrow-down /></el-icon>
@@ -104,7 +104,7 @@ import {
   Warning,
   Document
 } from '@element-plus/icons-vue'
-import { Ship, MapRoad } from '@icon-park/vue-next'
+import { Ship, MapRoad, User } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
