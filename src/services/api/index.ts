@@ -8,6 +8,9 @@ import * as merchants from './merchants'
 import * as crew from './crew'
 import * as boats from './boats'
 import * as products from './products'
+import * as bookings from './bookings'
+import * as cart from './cart'
+import * as orders from './orders'
 import * as rootGet from './rootGet'
 import * as healthCheckHealthGet from './healthCheckHealthGet'
 export default {
@@ -17,6 +20,9 @@ export default {
   crew,
   boats,
   products,
+  bookings,
+  cart,
+  orders,
   rootGet,
   healthCheckHealthGet,
 }

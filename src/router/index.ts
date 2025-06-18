@@ -54,7 +54,52 @@ const router = createRouter({
       children: [
         {
           path: '',
-          redirect: '/user/profile',
+          redirect: '/user/dashboard',
+        },
+        {
+          path: 'dashboard',
+          name: 'UserDashboard',
+          component: () => import('@/views/user/DashboardView.vue'),
+          meta: {
+            title: '用户中心 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'boats',
+          name: 'UserBoats',
+          component: () => import('@/views/user/BoatsView.vue'),
+          meta: {
+            title: '船舶预订 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'boats/:id',
+          name: 'UserBoatDetail',
+          component: () => import('@/views/user/BoatDetailView.vue'),
+          meta: {
+            title: '船舶详情 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'bookings',
+          name: 'UserBookings',
+          component: () => import('@/views/user/BookingsView.vue'),
+          meta: {
+            title: '我的预约 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'bookings/:id',
+          name: 'UserBookingDetail',
+          component: () => import('@/views/user/BookingDetailView.vue'),
+          meta: {
+            title: '预约详情 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
         },
         {
           path: 'profile',
