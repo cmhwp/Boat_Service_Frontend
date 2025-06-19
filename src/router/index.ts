@@ -128,6 +128,60 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
+        {
+          path: 'products',
+          name: 'UserProducts',
+          component: () => import('@/views/user/ProductsView.vue'),
+          meta: {
+            title: '农产品采购 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'products/:id',
+          name: 'UserProductDetail',
+          component: () => import('@/views/user/ProductDetailView.vue'),
+          meta: {
+            title: '商品详情 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'cart',
+          name: 'UserCart',
+          component: () => import('@/views/user/CartView.vue'),
+          meta: {
+            title: '购物车 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'orders',
+          name: 'UserOrders',
+          component: () => import('@/views/user/OrdersView.vue'),
+          meta: {
+            title: '我的订单 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'orders/:id',
+          name: 'UserOrderDetail',
+          component: () => import('@/views/user/OrderDetailView.vue'),
+          meta: {
+            title: '订单详情 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'checkout',
+          name: 'UserCheckout',
+          component: () => import('@/views/user/CheckoutView.vue'),
+          meta: {
+            title: '订单结算 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+          },
+        },
       ],
     },
 
