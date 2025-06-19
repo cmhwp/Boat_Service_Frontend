@@ -120,6 +120,26 @@ declare namespace API {
     success: boolean
   }
 
+  type ApiResponseCrewTaskDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: CrewTaskDetailSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseCrewTaskStatsSchema_ = {
+    /** Code */
+    code: number
+    data?: CrewTaskStatsSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponseDict_ = {
     /** Code */
     code: number
@@ -146,6 +166,17 @@ declare namespace API {
     code: number
     /** Data */
     data?: any[] | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseListCrewTaskListItemSchema_ = {
+    /** Code */
+    code: number
+    /** Data */
+    data?: CrewTaskListItemSchema[] | null
     /** Message */
     message: string
     /** Success */
@@ -266,6 +297,16 @@ declare namespace API {
     /** Code */
     code: number
     data?: PaginatedDataCrewListItemSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponsePaginatedDataCrewTaskListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataCrewTaskListItemSchema_ | null
     /** Message */
     message: string
     /** Success */
@@ -1004,6 +1045,102 @@ declare namespace API {
 
   type CrewStatus = 'active' | 'inactive'
 
+  type CrewTaskDetailSchema = {
+    /** Id 预约ID */
+    id: number
+    /** Booking Number 预约单号 */
+    booking_number: string
+    /** Boat 船只信息 */
+    boat: Record<string, any>
+    /** Customer 客户信息 */
+    customer: Record<string, any>
+    /** Merchant 商家信息 */
+    merchant: Record<string, any>
+    /** Start Time 开始时间 */
+    start_time: string
+    /** End Time 结束时间 */
+    end_time: string
+    /** Duration Hours 预约时长(小时) */
+    duration_hours: number
+    /** Passenger Count 乘客人数 */
+    passenger_count: number
+    /** Hourly Rate 小时费率 */
+    hourly_rate: number
+    /** Total Amount 总金额 */
+    total_amount: number
+    /** 预约状态 */
+    status: BookingStatus
+    /** 支付状态 */
+    payment_status: PaymentStatus
+    /** User Notes 用户备注 */
+    user_notes?: string | null
+    /** Merchant Notes 商家备注 */
+    merchant_notes?: string | null
+    /** Created At 创建时间 */
+    created_at: string
+    /** Confirmed At 确认时间 */
+    confirmed_at?: string | null
+    /** Completed At 完成时间 */
+    completed_at?: string | null
+    /** Crew Rating 船员评价 */
+    crew_rating?: Record<string, any> | null
+  }
+
+  type CrewTaskListItemSchema = {
+    /** Id 预约ID */
+    id: number
+    /** Booking Number 预约单号 */
+    booking_number: string
+    /** Boat Name 船只名称 */
+    boat_name: string
+    /** Customer Name 客户姓名 */
+    customer_name: string
+    /** Customer Phone 客户电话 */
+    customer_phone: string
+    /** Start Time 开始时间 */
+    start_time: string
+    /** End Time 结束时间 */
+    end_time: string
+    /** Passenger Count 乘客人数 */
+    passenger_count: number
+    /** Total Amount 总金额 */
+    total_amount: number
+    /** 预约状态 */
+    status: BookingStatus
+    /** User Notes 用户备注 */
+    user_notes?: string | null
+    /** Merchant Notes 商家备注 */
+    merchant_notes?: string | null
+    /** Created At 创建时间 */
+    created_at: string
+  }
+
+  type CrewTaskStatsSchema = {
+    /** Total Tasks 总任务数 */
+    total_tasks: number
+    /** Confirmed Tasks 已确认任务数 */
+    confirmed_tasks: number
+    /** In Progress Tasks 进行中任务数 */
+    in_progress_tasks: number
+    /** Completed Tasks 已完成任务数 */
+    completed_tasks: number
+    /** Total Earnings 总收入 */
+    total_earnings: number
+    /** Average Rating 平均评分 */
+    average_rating: number
+    /** Current Month Tasks 本月任务数 */
+    current_month_tasks: number
+    /** Current Month Earnings 本月收入 */
+    current_month_earnings: number
+  }
+
+  type CrewTaskStatusUpdateSchema = {
+    /** 任务状态 */
+    status: BookingStatus
+    /** Notes 船员备注 */
+    notes?: string | null
+  }
+
   type CrewUpdateSchema = {
     /** Boat License */
     boat_license?: string | null
@@ -1118,6 +1255,24 @@ declare namespace API {
     page?: number
     /** 每页数量 */
     page_size?: number
+  }
+
+  type getCrewTaskDetailApiV1BookingsCrewTasksBookingIdGetParams = {
+    /** 预约任务ID */
+    booking_id: number
+  }
+
+  type getCrewTasksApiV1BookingsCrewTasksGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 状态过滤 */
+    status?: BookingStatus | null
+    /** 开始日期 */
+    start_date?: string | null
+    /** 结束日期 */
+    end_date?: string | null
   }
 
   type getMerchantAuditHistoryApiV1MerchantsMerchantIdAuditHistoryGetParams = {
@@ -1708,6 +1863,19 @@ declare namespace API {
     total_pages: number
   }
 
+  type PaginatedDataCrewTaskListItemSchema_ = {
+    /** Items */
+    items: CrewTaskListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
   type PaginatedDataMerchantListItemSchema_ = {
     /** Items */
     items: MerchantListItemSchema[]
@@ -2057,6 +2225,11 @@ declare namespace API {
 
   type updateCrewApiV1CrewCrewIdPutParams = {
     crew_id: number
+  }
+
+  type updateCrewTaskStatusApiV1BookingsCrewTasksBookingIdStatusPatchParams = {
+    /** 预约任务ID */
+    booking_id: number
   }
 
   type updateMyBoatApiV1BoatsMyBoatIdPutParams = {

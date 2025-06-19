@@ -55,6 +55,15 @@
             <el-menu-item index="/merchant/goods">商品列表</el-menu-item>
             <el-menu-item index="/merchant/goods/add">添加商品</el-menu-item>
           </el-sub-menu>
+          <el-sub-menu index="bookings">
+            <template #title>
+              <el-icon><calendar /></el-icon>
+              <span>预约管理</span>
+            </template>
+            <el-menu-item index="/merchant/bookings">预约列表</el-menu-item>
+            <el-menu-item index="/merchant/bookings/pending">待处理预约</el-menu-item>
+          </el-sub-menu>
+
           <el-sub-menu index="orders">
             <template #title>
               <el-icon><list /></el-icon>
@@ -93,7 +102,14 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { UserFilled, ArrowDown, Setting, DataAnalysis, List } from '@element-plus/icons-vue'
+import {
+  UserFilled,
+  ArrowDown,
+  Setting,
+  DataAnalysis,
+  List,
+  Calendar,
+} from '@element-plus/icons-vue'
 import { Ship, MapRoad, User, Commodity } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
 

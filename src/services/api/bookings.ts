@@ -186,6 +186,108 @@ export async function checkBoatAvailabilityApiV1BookingsAvailabilityGet(
   )
 }
 
+/** 获取船员任务统计 获取船员任务统计数据
+
+包括：
+- 各状态任务数量统计
+- 总收入和本月收入
+- 平均评分
+- 服务完成情况
+
+注：收入按60%分成计算 GET /api/v1/bookings/crew/stats */
+export async function getCrewTaskStatsApiV1BookingsCrewStatsGet(options?: { [key: string]: any }) {
+  return request<API.ApiResponseCrewTaskStatsSchema_>('/api/v1/bookings/crew/stats', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
+/** 获取船员任务列表 获取船员任务列表（船员端）
+
+支持按状态、日期等条件过滤 GET /api/v1/bookings/crew/tasks */
+export async function getCrewTasksApiV1BookingsCrewTasksGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getCrewTasksApiV1BookingsCrewTasksGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponsePaginatedDataCrewTaskListItemSchema_>(
+    '/api/v1/bookings/crew/tasks',
+    {
+      method: 'GET',
+      params: {
+        // page has a default value: 1
+        page: '1',
+        // page_size has a default value: 10
+        page_size: '10',
+
+        ...params,
+      },
+      ...(options || {}),
+    }
+  )
+}
+
+/** 获取船员任务详情 获取船员任务详情
+
+包含完整的任务信息、客户信息、船只信息等 GET /api/v1/bookings/crew/tasks/${param0} */
+export async function getCrewTaskDetailApiV1BookingsCrewTasksBookingIdGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getCrewTaskDetailApiV1BookingsCrewTasksBookingIdGetParams,
+  options?: { [key: string]: any }
+) {
+  const { booking_id: param0, ...queryParams } = params
+  return request<API.ApiResponseCrewTaskDetailSchema_>(`/api/v1/bookings/crew/tasks/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  })
+}
+
+/** 更新任务状态 更新船员任务状态（船员端）
+
+- **status**: 任务状态（必填，只能是in_progress或completed）
+- **notes**: 船员备注（可选）
+
+状态转换规则：
+- confirmed -> in_progress（开始服务）
+- in_progress -> completed（完成服务）
+
+限制条件：
+- 开始服务：需要在预约时间前30分钟内
+- 完成服务：只能完成进行中的任务 PATCH /api/v1/bookings/crew/tasks/${param0}/status */
+export async function updateCrewTaskStatusApiV1BookingsCrewTasksBookingIdStatusPatch(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.updateCrewTaskStatusApiV1BookingsCrewTasksBookingIdStatusPatchParams,
+  body: API.CrewTaskStatusUpdateSchema,
+  options?: { [key: string]: any }
+) {
+  const { booking_id: param0, ...queryParams } = params
+  return request<API.ApiResponseBookingResponseSchema_>(
+    `/api/v1/bookings/crew/tasks/${param0}/status`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: { ...queryParams },
+      data: body,
+      ...(options || {}),
+    }
+  )
+}
+
+/** 获取船员今日任务 获取船员今日任务列表
+
+返回今天需要执行的所有已确认和进行中的任务 GET /api/v1/bookings/crew/tasks/today */
+export async function getCrewTodayTasksApiV1BookingsCrewTasksTodayGet(options?: {
+  [key: string]: any
+}) {
+  return request<API.ApiResponseListCrewTaskListItemSchema_>('/api/v1/bookings/crew/tasks/today', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
 /** 获取商家预约列表 获取商家预约列表（商家端）
 
 包含完整的预约信息和关联数据 GET /api/v1/bookings/merchant/list */

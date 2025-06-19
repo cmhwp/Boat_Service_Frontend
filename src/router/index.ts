@@ -314,6 +314,26 @@ const router = createRouter({
             requiredRole: 'merchant',
           },
         },
+        {
+          path: 'bookings',
+          name: 'MerchantBookings',
+          component: () => import('@/views/merchant/BookingsView.vue'),
+          meta: {
+            title: '预约管理 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
+        {
+          path: 'bookings/:id',
+          name: 'MerchantBookingDetail',
+          component: () => import('@/views/merchant/BookingDetailView.vue'),
+          meta: {
+            title: '预约详情 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
       ],
     },
 
