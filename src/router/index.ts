@@ -360,6 +360,46 @@ const router = createRouter({
             requiredRole: 'crew',
           },
         },
+        {
+          path: 'tasks',
+          name: 'CrewTasks',
+          component: () => import('@/views/crew/TasksView.vue'),
+          meta: {
+            title: '任务列表 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'crew',
+          },
+        },
+        {
+          path: 'tasks/current',
+          name: 'CrewCurrentTasks',
+          component: () => import('@/views/crew/TasksView.vue'),
+          meta: {
+            title: '当前任务 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'crew',
+          },
+        },
+        {
+          path: 'tasks/completed',
+          name: 'CrewCompletedTasks',
+          component: () => import('@/views/crew/TasksView.vue'),
+          meta: {
+            title: '已完成任务 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'crew',
+          },
+        },
+        {
+          path: 'tasks/:id',
+          name: 'CrewTaskDetail',
+          component: () => import('@/views/crew/TaskDetailView.vue'),
+          meta: {
+            title: '任务详情 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'crew',
+          },
+        },
       ],
     },
 
