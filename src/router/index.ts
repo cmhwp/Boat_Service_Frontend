@@ -334,6 +334,26 @@ const router = createRouter({
             requiredRole: 'merchant',
           },
         },
+        {
+          path: 'orders',
+          name: 'MerchantOrders',
+          component: () => import('@/views/merchant/OrdersView.vue'),
+          meta: {
+            title: '订单管理 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
+        {
+          path: 'orders/:id',
+          name: 'MerchantOrderDetail',
+          component: () => import('@/views/merchant/OrderDetailView.vue'),
+          meta: {
+            title: '订单详情 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
       ],
     },
 
