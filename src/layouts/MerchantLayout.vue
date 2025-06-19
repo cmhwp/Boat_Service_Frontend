@@ -70,7 +70,6 @@
               <span>订单管理</span>
             </template>
             <el-menu-item index="/merchant/orders">订单列表</el-menu-item>
-            <el-menu-item index="/merchant/orders/pending">待处理订单</el-menu-item>
           </el-sub-menu>
 
           <el-menu-item index="/merchant/routes">
