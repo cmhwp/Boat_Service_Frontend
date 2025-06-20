@@ -25,7 +25,6 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="profile">个人中心</el-dropdown-item>
-              <el-dropdown-item command="home">返回首页</el-dropdown-item>
               <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
