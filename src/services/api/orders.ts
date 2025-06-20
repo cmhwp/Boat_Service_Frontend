@@ -73,6 +73,98 @@ export async function updateOrderStatusApiV1OrdersOrderIdStatusPatch(
   })
 }
 
+/** 管理员获取订单详情 管理员获取订单详情
+
+包含完整的订单信息、用户信息、商家信息、支付记录等 GET /api/v1/orders/admin/${param0} */
+export async function adminGetOrderDetailApiV1OrdersAdminOrderIdGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminGetOrderDetailApiV1OrdersAdminOrderIdGetParams,
+  options?: { [key: string]: any }
+) {
+  const { order_id: param0, ...queryParams } = params
+  return request<API.ApiResponseAdminOrderDetailSchema_>(`/api/v1/orders/admin/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  })
+}
+
+/** 管理员操作订单 管理员操作订单
+
+- **operation**: 操作类型（必填）
+  - force_cancel: 强制取消订单
+  - refund: 处理退款
+- **reason**: 操作原因（必填）
+- **notes**: 管理员备注（可选）
+
+支持的操作：
+- 强制取消：可取消除已完成外的任何状态订单，已支付订单会恢复库存
+- 处理退款：只能对已支付订单操作，会恢复库存并设置为退款状态 POST /api/v1/orders/admin/${param0}/operate */
+export async function adminOperateOrderApiV1OrdersAdminOrderIdOperatePost(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminOperateOrderApiV1OrdersAdminOrderIdOperatePostParams,
+  body: API.AdminOrderOperationSchema,
+  options?: { [key: string]: any }
+) {
+  const { order_id: param0, ...queryParams } = params
+  return request<API.ApiResponseOrderResponseSchema_>(`/api/v1/orders/admin/${param0}/operate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** 管理员获取所有订单 管理员获取所有订单列表
+
+- **status**: 状态过滤（可选）
+- **start_date**: 开始日期（可选）
+- **end_date**: 结束日期（可选）
+- **merchant_id**: 商家ID过滤（可选）
+- **user_id**: 用户ID过滤（可选）
+- **order_number**: 订单号搜索（可选）
+
+包含用户信息、商家信息、支付信息等完整数据 GET /api/v1/orders/admin/all */
+export async function adminGetAllOrdersApiV1OrdersAdminAllGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminGetAllOrdersApiV1OrdersAdminAllGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponsePaginatedDataAdminOrderListItemSchema_>(
+    '/api/v1/orders/admin/all',
+    {
+      method: 'GET',
+      params: {
+        // page has a default value: 1
+        page: '1',
+        // page_size has a default value: 10
+        page_size: '10',
+
+        ...params,
+      },
+      ...(options || {}),
+    }
+  )
+}
+
+/** 管理员获取平台订单统计 管理员获取平台订单统计
+
+包含：
+- 各状态订单数量统计
+- 总金额和已支付金额
+- 平台抽成和商家收入统计 GET /api/v1/orders/admin/statistics */
+export async function adminGetOrderStatisticsApiV1OrdersAdminStatisticsGet(options?: {
+  [key: string]: any
+}) {
+  return request<API.ApiResponseDict_>('/api/v1/orders/admin/statistics', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
 /** 立即购买创建订单 立即购买创建订单（跳过购物车）
 
 - **product_id**: 商品ID（必填）
@@ -146,12 +238,9 @@ export async function getMerchantOrdersApiV1OrdersMerchantListGet(
   })
 }
 
-/** 获取订单统计 获取商家订单统计数据
+/** 获取订单统计 获取商家订单统计
 
-包括：
-- 各状态订单数量
-- 订单总金额
-- 已收款金额 GET /api/v1/orders/merchant/stats */
+包含各状态订单数量、金额统计等 GET /api/v1/orders/merchant/stats */
 export async function getOrderStatsApiV1OrdersMerchantStatsGet(options?: { [key: string]: any }) {
   return request<API.ApiResponseOrderStatsSchema_>('/api/v1/orders/merchant/stats', {
     method: 'GET',
@@ -197,12 +286,15 @@ export async function createPaymentApiV1OrdersPaymentPost(
   body: API.PaymentCreateSchema,
   options?: { [key: string]: any }
 ) {
-  return request<API.ApiResponsePaymentResponseSchema_>('/api/v1/orders/payment', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  })
+  return request<API.app_schemas_response_ApiResponsePaymentResponseSchema_2>(
+    '/api/v1/orders/payment',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    }
+  )
 }

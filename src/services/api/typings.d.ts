@@ -1,9 +1,379 @@
 declare namespace API {
+  type AdminBoatDetailSchema = {
+    /** Id 船只ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 船只名称 */
+    name: string
+    /** License Number 船只证书号 */
+    license_number: string
+    /** 船只类型 */
+    boat_type: BoatType
+    /** Capacity 载客量 */
+    capacity: number
+    /** Hourly Rate 小时费率 */
+    hourly_rate: number
+    /** Description 船只描述 */
+    description?: string | null
+    /** Images 船只图片列表 */
+    images?: string[]
+    /** 状态 */
+    status: BoatStatus
+    /** Current Location 当前位置 */
+    current_location?: string | null
+    /** Created At 创建时间 */
+    created_at: string
+    /** Updated At 更新时间 */
+    updated_at: string
+    /** Merchant 商家信息 */
+    merchant?: Record<string, any> | null
+    /** Booking Count 预约次数 */
+    booking_count?: number
+    /** Total Income 总收入 */
+    total_income?: number
+    /** Recent Bookings 最近预约记录 */
+    recent_bookings?: Record<string, any>[]
+  }
+
+  type AdminBoatListItemSchema = {
+    /** Id 船只ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 船只名称 */
+    name: string
+    /** 船只类型 */
+    boat_type: BoatType
+    /** Capacity 载客量 */
+    capacity: number
+    /** Hourly Rate 小时费率 */
+    hourly_rate: number
+    /** 状态 */
+    status: BoatStatus
+    /** Current Location 当前位置 */
+    current_location?: string | null
+    /** Images 船只图片列表 */
+    images?: string[]
+    /** Created At 创建时间 */
+    created_at: string
+    /** Merchant Name 商家名称 */
+    merchant_name: string
+    /** Booking Count 预约次数 */
+    booking_count?: number
+    /** Total Income 总收入 */
+    total_income?: number
+  }
+
+  type AdminBoatOperationSchema = {
+    /** Operation 操作类型：suspend（暂停）| activate（激活）| maintenance（维护） */
+    operation: string
+    /** Reason 操作原因 */
+    reason: string
+    /** Notes 管理员备注 */
+    notes?: string | null
+  }
+
+  type adminGetAllBoatsApiV1BoatsAdminAllGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 商家ID过滤 */
+    merchant_id?: number | null
+    /** 船只类型过滤 */
+    boat_type?: BoatType | null
+    /** 状态过滤 */
+    status?: BoatStatus | null
+    /** 船只名称搜索 */
+    name?: string | null
+    /** 证书号搜索 */
+    license_number?: string | null
+  }
+
+  type adminGetAllOrdersApiV1OrdersAdminAllGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 状态过滤 */
+    status?: OrderStatus | null
+    /** 开始日期 */
+    start_date?: string | null
+    /** 结束日期 */
+    end_date?: string | null
+    /** 商家ID过滤 */
+    merchant_id?: number | null
+    /** 用户ID过滤 */
+    user_id?: number | null
+    /** 订单号搜索 */
+    order_number?: string | null
+  }
+
+  type adminGetAllProductsApiV1ProductsAdminAllGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
+    /** 商家ID过滤 */
+    merchant_id?: number | null
+    /** 商品分类过滤 */
+    category?: ProductCategory | null
+    /** 状态过滤 */
+    status?: ProductStatus | null
+    /** 商品名称搜索 */
+    name?: string | null
+    /** 最低价格 */
+    min_price?: number | null
+    /** 最高价格 */
+    max_price?: number | null
+    /** 低库存筛选（库存<10） */
+    low_stock?: boolean | null
+  }
+
+  type adminGetBoatDetailApiV1BoatsAdminBoatIdGetParams = {
+    /** 船只ID */
+    boat_id: number
+  }
+
+  type adminGetOrderDetailApiV1OrdersAdminOrderIdGetParams = {
+    /** 订单ID */
+    order_id: number
+  }
+
+  type adminGetProductDetailApiV1ProductsAdminProductIdGetParams = {
+    /** 商品ID */
+    product_id: number
+  }
+
+  type adminOperateBoatApiV1BoatsAdminBoatIdOperatePostParams = {
+    /** 船只ID */
+    boat_id: number
+  }
+
+  type adminOperateOrderApiV1OrdersAdminOrderIdOperatePostParams = {
+    /** 订单ID */
+    order_id: number
+  }
+
+  type adminOperateProductApiV1ProductsAdminProductIdOperatePostParams = {
+    /** 商品ID */
+    product_id: number
+  }
+
+  type AdminOrderDetailSchema = {
+    /** Id 订单ID */
+    id: number
+    /** Order Number 订单号 */
+    order_number: string
+    /** User Id 用户ID */
+    user_id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Total Amount 订单总金额 */
+    total_amount: number
+    /** Discount Amount 优惠金额 */
+    discount_amount: number
+    /** Shipping Fee 运费 */
+    shipping_fee: number
+    /** Final Amount 实付金额 */
+    final_amount: number
+    /** 订单状态 */
+    status: OrderStatus
+    /** 支付方式 */
+    payment_method?: PaymentMethod | null
+    /** Receiver Name 收货人姓名 */
+    receiver_name: string
+    /** Receiver Phone 收货人电话 */
+    receiver_phone: string
+    /** Receiver Address 收货地址 */
+    receiver_address: string
+    /** User Notes 用户备注 */
+    user_notes?: string | null
+    /** Merchant Notes 商家备注 */
+    merchant_notes?: string | null
+    /** Cancel Reason 取消原因 */
+    cancel_reason?: string | null
+    /** Created At 创建时间 */
+    created_at: string
+    /** Updated At 更新时间 */
+    updated_at: string
+    /** Paid At 支付时间 */
+    paid_at?: string | null
+    /** Shipped At 发货时间 */
+    shipped_at?: string | null
+    /** Delivered At 送达时间 */
+    delivered_at?: string | null
+    /** Completed At 完成时间 */
+    completed_at?: string | null
+    /** Cancelled At 取消时间 */
+    cancelled_at?: string | null
+    /** User 用户信息 */
+    user?: Record<string, any> | null
+    /** Merchant 商家信息 */
+    merchant?: Record<string, any> | null
+    /** Order Items 订单项列表 */
+    order_items?: OrderItemResponseSchema[]
+    /** Payment Records 支付记录列表 */
+    payment_records?: app_schemas_order_PaymentResponseSchema[]
+  }
+
+  type AdminOrderListItemSchema = {
+    /** Id 订单ID */
+    id: number
+    /** Order Number 订单号 */
+    order_number: string
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Merchant Name 商家名称 */
+    merchant_name: string
+    /** Total Amount 订单总金额 */
+    total_amount: number
+    /** Final Amount 实付金额 */
+    final_amount: number
+    /** 订单状态 */
+    status: OrderStatus
+    /** Item Count 商品种类数 */
+    item_count: number
+    /** Total Quantity 商品总数量 */
+    total_quantity: number
+    /** Created At 创建时间 */
+    created_at: string
+    /** User Name 用户名 */
+    user_name: string
+    /** User Phone 用户电话 */
+    user_phone?: string | null
+    /** 支付方式 */
+    payment_method?: PaymentMethod | null
+    /** Paid At 支付时间 */
+    paid_at?: string | null
+  }
+
+  type AdminOrderOperationSchema = {
+    /** Operation 操作类型：force_cancel（强制取消）| refund（退款） */
+    operation: string
+    /** Reason 操作原因 */
+    reason: string
+    /** Notes 管理员备注 */
+    notes?: string | null
+  }
+
+  type AdminProductDetailSchema = {
+    /** Id 商品ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 商品名称 */
+    name: string
+    /** 商品分类 */
+    category: ProductCategory
+    /** Description 商品描述 */
+    description?: string | null
+    /** Price 商品价格 */
+    price: number
+    /** Stock 库存数量 */
+    stock: number
+    /** Unit 计量单位 */
+    unit: string
+    /** Images 商品图片列表 */
+    images?: string[]
+    /** Rating 评分 */
+    rating: number
+    /** Sales Count 销售数量 */
+    sales_count: number
+    /** 状态 */
+    status: ProductStatus
+    /** Created At 创建时间 */
+    created_at: string
+    /** Updated At 更新时间 */
+    updated_at: string
+    /** Merchant 商家信息 */
+    merchant?: Record<string, any> | null
+    /** Order Count 订单数量 */
+    order_count?: number
+    /** Total Sales 总销售额 */
+    total_sales?: number
+    /** Recent Orders 最近订单记录 */
+    recent_orders?: Record<string, any>[]
+  }
+
+  type AdminProductListItemSchema = {
+    /** Id 商品ID */
+    id: number
+    /** Merchant Id 商家ID */
+    merchant_id: number
+    /** Name 商品名称 */
+    name: string
+    /** 商品分类 */
+    category: ProductCategory
+    /** Price 商品价格 */
+    price: number
+    /** Stock 库存数量 */
+    stock: number
+    /** Unit 计量单位 */
+    unit: string
+    /** Images 商品图片列表 */
+    images?: string[]
+    /** Rating 评分 */
+    rating: number
+    /** Sales Count 销售数量 */
+    sales_count: number
+    /** 状态 */
+    status: ProductStatus
+    /** Created At 创建时间 */
+    created_at: string
+    /** Merchant Name 商家名称 */
+    merchant_name: string
+    /** Order Count 订单数量 */
+    order_count?: number
+    /** Total Sales 总销售额 */
+    total_sales?: number
+  }
+
+  type AdminProductOperationSchema = {
+    /** Operation 操作类型：deactivate（下架）| activate（上架）| sold_out（售罄） */
+    operation: string
+    /** Reason 操作原因 */
+    reason: string
+    /** Notes 管理员备注 */
+    notes?: string | null
+  }
+
   type ApiResponse = {
     /** Code */
     code: number
     /** Data */
     data?: any | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseAdminBoatDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: AdminBoatDetailSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseAdminOrderDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: AdminOrderDetailSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseAdminProductDetailSchema_ = {
+    /** Code */
+    code: number
+    data?: AdminProductDetailSchema | null
     /** Message */
     message: string
     /** Success */
@@ -253,6 +623,36 @@ declare namespace API {
     success: boolean
   }
 
+  type ApiResponsePaginatedDataAdminBoatListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataAdminBoatListItemSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponsePaginatedDataAdminOrderListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataAdminOrderListItemSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponsePaginatedDataAdminProductListItemSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataAdminProductListItemSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponsePaginatedDataBoatListItemSchema_ = {
     /** Code */
     code: number
@@ -343,6 +743,16 @@ declare namespace API {
     success: boolean
   }
 
+  type ApiResponsePaginatedDataPaymentStatusResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: PaginatedDataPaymentStatusResponseSchema_ | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponsePaginatedDataProductListItemSchema_ = {
     /** Code */
     code: number
@@ -373,10 +783,10 @@ declare namespace API {
     success: boolean
   }
 
-  type ApiResponsePaymentResponseSchema_ = {
+  type ApiResponsePaymentStatusResponseSchema_ = {
     /** Code */
     code: number
-    data?: PaymentResponseSchema | null
+    data?: PaymentStatusResponseSchema | null
     /** Message */
     message: string
     /** Success */
@@ -413,6 +823,16 @@ declare namespace API {
     success: boolean
   }
 
+  type ApiResponseRefundResponseSchema_ = {
+    /** Code */
+    code: number
+    data?: RefundResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
   type ApiResponseUploadResponseSchema_ = {
     /** Code */
     code: number
@@ -437,6 +857,64 @@ declare namespace API {
     /** Code */
     code: number
     data?: VerificationCodeResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type app_schemas_booking_PaymentResponseSchema = {
+    /** Booking Id 预约ID */
+    booking_id: number
+    /** Booking Number 预约单号 */
+    booking_number: string
+    /** Total Amount 支付金额 */
+    total_amount: number
+    /** Payment Status 支付状态 */
+    payment_status: string
+    /** Payment Time 支付时间 */
+    payment_time: string
+    /** Payment Method 支付方式 */
+    payment_method: string
+    /** Payment Notes 支付备注 */
+    payment_notes?: string | null
+  }
+
+  type app_schemas_order_PaymentResponseSchema = {
+    /** Id 支付记录ID */
+    id: number
+    /** Payment Number 支付单号 */
+    payment_number: string
+    /** Order Id 订单ID */
+    order_id: number
+    /** Amount 支付金额 */
+    amount: number
+    /** 支付方式 */
+    payment_method: PaymentMethod
+    /** Is Success 是否支付成功 */
+    is_success: boolean
+    /** Third Party Number 第三方支付单号 */
+    third_party_number?: string | null
+    /** Created At 创建时间 */
+    created_at: string
+    /** Paid At 支付时间 */
+    paid_at?: string | null
+  }
+
+  type app_schemas_response_ApiResponsePaymentResponseSchema_1 = {
+    /** Code */
+    code: number
+    data?: app_schemas_booking_PaymentResponseSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type app_schemas_response_ApiResponsePaymentResponseSchema_2 = {
+    /** Code */
+    code: number
+    data?: app_schemas_order_PaymentResponseSchema | null
     /** Message */
     message: string
     /** Success */
@@ -1394,6 +1872,11 @@ declare namespace API {
     order_id: number
   }
 
+  type getPaymentStatusApiV1BookingsPaymentStatusBookingIdGetParams = {
+    /** 预约ID */
+    booking_id: number
+  }
+
   type getPendingMerchantsApiV1MerchantsPendingGetParams = {
     /** 页码 */
     page?: number
@@ -1437,6 +1920,13 @@ declare namespace API {
 
   type getUserByIdApiV1UsersUserIdGetParams = {
     user_id: number
+  }
+
+  type getUserPaymentRecordsApiV1BookingsPaymentRecordsGetParams = {
+    /** 页码 */
+    page?: number
+    /** 每页数量 */
+    page_size?: number
   }
 
   type getUsersListApiV1UsersGetParams = {
@@ -1798,6 +2288,45 @@ declare namespace API {
     cancel_reason?: string | null
   }
 
+  type PaginatedDataAdminBoatListItemSchema_ = {
+    /** Items */
+    items: AdminBoatListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
+  type PaginatedDataAdminOrderListItemSchema_ = {
+    /** Items */
+    items: AdminOrderListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
+  type PaginatedDataAdminProductListItemSchema_ = {
+    /** Items */
+    items: AdminProductListItemSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
   type PaginatedDataBoatListItemSchema_ = {
     /** Items */
     items: BoatListItemSchema[]
@@ -1915,6 +2444,19 @@ declare namespace API {
     total_pages: number
   }
 
+  type PaginatedDataPaymentStatusResponseSchema_ = {
+    /** Items */
+    items: PaymentStatusResponseSchema[]
+    /** Total */
+    total: number
+    /** Page */
+    page: number
+    /** Page Size */
+    page_size: number
+    /** Total Pages */
+    total_pages: number
+  }
+
   type PaginatedDataProductListItemSchema_ = {
     /** Items */
     items: ProductListItemSchema[]
@@ -1963,28 +2505,33 @@ declare namespace API {
 
   type PaymentMethod = 'alipay' | 'wechat' | 'bankcard' | 'balance'
 
-  type PaymentResponseSchema = {
-    /** Id 支付记录ID */
-    id: number
-    /** Payment Number 支付单号 */
-    payment_number: string
-    /** Order Id 订单ID */
-    order_id: number
-    /** Amount 支付金额 */
-    amount: number
-    /** 支付方式 */
-    payment_method: PaymentMethod
-    /** Is Success 是否支付成功 */
-    is_success: boolean
-    /** Third Party Number 第三方支付单号 */
-    third_party_number?: string | null
-    /** Created At 创建时间 */
-    created_at: string
-    /** Paid At 支付时间 */
-    paid_at?: string | null
+  type PaymentRequestSchema = {
+    /** Booking Id 预约ID */
+    booking_id: number
+    /** Payment Method 支付方式（模拟支付） */
+    payment_method?: string
+    /** Payment Notes 支付备注 */
+    payment_notes?: string | null
   }
 
   type PaymentStatus = 'unpaid' | 'paid' | 'refunded' | 'refunding'
+
+  type PaymentStatusResponseSchema = {
+    /** Booking Id 预约ID */
+    booking_id: number
+    /** Booking Number 预约单号 */
+    booking_number: string
+    /** Total Amount 订单金额 */
+    total_amount: number
+    /** Payment Status 支付状态 */
+    payment_status: string
+    /** Booking Status 预约状态 */
+    booking_status: string
+    /** Created At 创建时间 */
+    created_at: string
+    /** Payment Time 支付时间 */
+    payment_time?: string | null
+  }
 
   type ProductCategory = 'fruit' | 'vegetable' | 'grain' | 'seafood' | 'other'
 
@@ -2171,6 +2718,28 @@ declare namespace API {
   }
 
   type RealnameStatus = 'unverified' | 'pending' | 'verified'
+
+  type RefundRequestSchema = {
+    /** Booking Id 预约ID */
+    booking_id: number
+    /** Refund Reason 退款原因 */
+    refund_reason: string
+  }
+
+  type RefundResponseSchema = {
+    /** Booking Id 预约ID */
+    booking_id: number
+    /** Booking Number 预约单号 */
+    booking_number: string
+    /** Refund Amount 退款金额 */
+    refund_amount: number
+    /** Refund Status 退款状态 */
+    refund_status: string
+    /** Refund Time 退款时间 */
+    refund_time: string
+    /** Refund Reason 退款原因 */
+    refund_reason: string
+  }
 
   type removeCartItemApiV1CartCartItemIdDeleteParams = {
     /** 购物车项ID */

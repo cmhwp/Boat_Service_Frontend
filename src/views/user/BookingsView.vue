@@ -145,6 +145,26 @@
                 查看详情
               </el-button>
 
+              <!-- 支付按钮 -->
+              <el-button
+                v-if="canPay(booking)"
+                type="warning"
+                size="small"
+                @click="payBooking(booking)"
+              >
+                立即支付
+              </el-button>
+
+              <!-- 申请退款按钮 -->
+              <el-button
+                v-if="canRefund(booking)"
+                type="danger"
+                size="small"
+                @click="requestRefund(booking)"
+              >
+                申请退款
+              </el-button>
+
               <el-button
                 v-if="canCancel(booking)"
                 type="danger"
@@ -217,6 +237,73 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- 支付对话框 -->
+    <el-dialog v-model="paymentDialogVisible" title="支付预约" width="500px">
+      <div class="payment-info">
+        <p><strong>预约单号：</strong>{{ selectedBooking?.booking_number }}</p>
+        <p><strong>船只名称：</strong>{{ selectedBooking?.boat_name }}</p>
+        <p>
+          <strong>支付金额：</strong
+          ><span class="payment-amount">¥{{ selectedBooking?.total_amount }}</span>
+        </p>
+      </div>
+
+      <el-form ref="paymentFormRef" :model="paymentForm" :rules="paymentRules" label-width="100px">
+        <el-form-item label="支付方式" prop="payment_method">
+          <el-radio-group v-model="paymentForm.payment_method">
+            <el-radio value="alipay">支付宝</el-radio>
+            <el-radio value="wechat">微信支付</el-radio>
+            <el-radio value="bankcard">银行卡</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="支付备注">
+          <el-input
+            v-model="paymentForm.payment_notes"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入支付备注（可选）"
+          />
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <el-button @click="paymentDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitPayment" :loading="paymentSubmitting">
+          确认支付
+        </el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 退款申请对话框 -->
+    <el-dialog v-model="refundDialogVisible" title="申请退款" width="500px">
+      <div class="refund-info">
+        <p><strong>预约单号：</strong>{{ selectedBooking?.booking_number }}</p>
+        <p><strong>船只名称：</strong>{{ selectedBooking?.boat_name }}</p>
+        <p>
+          <strong>退款金额：</strong
+          ><span class="refund-amount">¥{{ selectedBooking?.total_amount }}</span>
+        </p>
+      </div>
+
+      <el-form ref="refundFormRef" :model="refundForm" :rules="refundRules" label-width="80px">
+        <el-form-item label="退款原因" prop="refund_reason">
+          <el-input
+            v-model="refundForm.refund_reason"
+            type="textarea"
+            :rows="4"
+            placeholder="请详细说明退款原因（5-500字符）"
+          />
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <el-button @click="refundDialogVisible = false">取消</el-button>
+        <el-button type="danger" @click="submitRefund" :loading="refundSubmitting">
+          申请退款
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -231,6 +318,8 @@ import {
   getMyBookingsApiV1BookingsMyGet,
   cancelBookingApiV1BookingsBookingIdCancelPatch,
   createCrewRatingApiV1BookingsRatingsPost,
+  simulatePaymentApiV1BookingsPaymentPost,
+  requestRefundApiV1BookingsPaymentRefundPost,
 } from '@/services/api/bookings'
 
 const router = useRouter()
@@ -240,8 +329,14 @@ const loading = ref(false)
 const bookings = ref<API.BookingListItemSchema[]>([])
 const ratingDialogVisible = ref(false)
 const ratingSubmitting = ref(false)
+const paymentDialogVisible = ref(false)
+const paymentSubmitting = ref(false)
+const refundDialogVisible = ref(false)
+const refundSubmitting = ref(false)
 const selectedBooking = ref<API.BookingListItemSchema | null>(null)
 const ratingFormRef = ref<FormInstance>()
+const paymentFormRef = ref<FormInstance>()
+const refundFormRef = ref<FormInstance>()
 
 // 筛选表单
 const filterForm = reactive({
@@ -263,9 +358,33 @@ const ratingForm = reactive({
   comment: '',
 })
 
+// 支付表单
+const paymentForm = reactive({
+  payment_method: 'alipay',
+  payment_notes: '',
+})
+
+// 退款表单
+const refundForm = reactive({
+  refund_reason: '',
+})
+
 // 评价表单验证规则
 const ratingRules: FormRules = {
   rating: [{ required: true, message: '请选择评分', trigger: 'blur' }],
+}
+
+// 支付表单验证规则
+const paymentRules: FormRules = {
+  payment_method: [{ required: true, message: '请选择支付方式', trigger: 'change' }],
+}
+
+// 退款表单验证规则
+const refundRules: FormRules = {
+  refund_reason: [
+    { required: true, message: '请输入退款原因', trigger: 'blur' },
+    { min: 5, max: 500, message: '退款原因长度在5到500个字符', trigger: 'blur' },
+  ],
 }
 
 // 获取预约列表
@@ -395,6 +514,25 @@ const canRate = (booking: API.BookingListItemSchema) => {
   return booking.status === 'completed'
 }
 
+// 判断是否可以支付
+const canPay = (booking: API.BookingListItemSchema) => {
+  // 只有未支付且状态为待确认或已确认的预约可以支付
+  return (
+    booking.payment_status === 'unpaid' &&
+    (booking.status === 'pending' || booking.status === 'confirmed')
+  )
+}
+
+// 判断是否可以申请退款
+const canRefund = (booking: API.BookingListItemSchema) => {
+  // 只有已支付且状态为待确认、已确认的预约可以退款
+  // 进行中或已完成的订单不能退款
+  return (
+    booking.payment_status === 'paid' &&
+    (booking.status === 'pending' || booking.status === 'confirmed')
+  )
+}
+
 // 查看预约详情
 const viewBookingDetail = (bookingId: number) => {
   router.push(`/user/bookings/${bookingId}`)
@@ -460,6 +598,78 @@ const submitRating = async () => {
     ElMessage.error(error.response?.data?.message || '评价失败')
   } finally {
     ratingSubmitting.value = false
+  }
+}
+
+// 支付预约
+const payBooking = (booking: API.BookingListItemSchema) => {
+  selectedBooking.value = booking
+  paymentForm.payment_method = 'alipay'
+  paymentForm.payment_notes = ''
+  paymentDialogVisible.value = true
+}
+
+// 提交支付
+const submitPayment = async () => {
+  if (!paymentFormRef.value || !selectedBooking.value) return
+
+  try {
+    await paymentFormRef.value.validate()
+  } catch {
+    return
+  }
+
+  try {
+    paymentSubmitting.value = true
+    await simulatePaymentApiV1BookingsPaymentPost({
+      booking_id: selectedBooking.value.id,
+      payment_method: paymentForm.payment_method,
+      payment_notes: paymentForm.payment_notes,
+    })
+
+    ElMessage.success('支付成功')
+    paymentDialogVisible.value = false
+    await fetchBookings()
+  } catch (error: any) {
+    console.error('支付失败:', error)
+    ElMessage.error(error.response?.data?.message || '支付失败')
+  } finally {
+    paymentSubmitting.value = false
+  }
+}
+
+// 申请退款
+const requestRefund = (booking: API.BookingListItemSchema) => {
+  selectedBooking.value = booking
+  refundForm.refund_reason = ''
+  refundDialogVisible.value = true
+}
+
+// 提交退款申请
+const submitRefund = async () => {
+  if (!refundFormRef.value || !selectedBooking.value) return
+
+  try {
+    await refundFormRef.value.validate()
+  } catch {
+    return
+  }
+
+  try {
+    refundSubmitting.value = true
+    await requestRefundApiV1BookingsPaymentRefundPost({
+      booking_id: selectedBooking.value.id,
+      refund_reason: refundForm.refund_reason,
+    })
+
+    ElMessage.success('退款申请提交成功')
+    refundDialogVisible.value = false
+    await fetchBookings()
+  } catch (error: any) {
+    console.error('申请退款失败:', error)
+    ElMessage.error(error.response?.data?.message || '申请退款失败')
+  } finally {
+    refundSubmitting.value = false
   }
 }
 
@@ -699,5 +909,46 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin-top: 32px;
+}
+
+/* 支付对话框样式 */
+.payment-info {
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.payment-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.payment-amount {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f56565;
+}
+
+/* 退款对话框样式 */
+.refund-info {
+  padding: 16px;
+  background: #fff5f5;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #fed7d7;
+}
+
+.refund-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.refund-amount {
+  font-size: 20px;
+  font-weight: 600;
+  color: #e53e3e;
 }
 </style>

@@ -42,6 +42,94 @@ export async function getBoatDetailApiV1BoatsBoatIdGet(
   })
 }
 
+/** 管理员获取船只详情 管理员获取船只详情
+
+包含完整的船只信息、商家信息、预约统计、最近预约记录等 GET /api/v1/boats/admin/${param0} */
+export async function adminGetBoatDetailApiV1BoatsAdminBoatIdGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminGetBoatDetailApiV1BoatsAdminBoatIdGetParams,
+  options?: { [key: string]: any }
+) {
+  const { boat_id: param0, ...queryParams } = params
+  return request<API.ApiResponseAdminBoatDetailSchema_>(`/api/v1/boats/admin/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  })
+}
+
+/** 管理员操作船只 管理员操作船只
+
+- **operation**: 操作类型（必填）
+  - suspend: 暂停船只（设为停用状态）
+  - activate: 激活船只（设为可用状态）
+  - maintenance: 设置维护状态
+- **reason**: 操作原因（必填）
+- **notes**: 管理员备注（可选）
+
+用于处理违规船只或设置维护状态
+操作记录会保存在船只描述中 POST /api/v1/boats/admin/${param0}/operate */
+export async function adminOperateBoatApiV1BoatsAdminBoatIdOperatePost(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminOperateBoatApiV1BoatsAdminBoatIdOperatePostParams,
+  body: API.AdminBoatOperationSchema,
+  options?: { [key: string]: any }
+) {
+  const { boat_id: param0, ...queryParams } = params
+  return request<API.ApiResponseBoatResponseSchema_>(`/api/v1/boats/admin/${param0}/operate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** 管理员获取所有船只 管理员获取所有船只列表
+
+- **merchant_id**: 商家ID过滤（可选）
+- **boat_type**: 船只类型过滤（可选）
+- **status**: 状态过滤（可选）
+- **name**: 船只名称搜索（可选）
+- **license_number**: 证书号搜索（可选）
+
+包含商家信息、预约统计、收入统计等完整数据 GET /api/v1/boats/admin/all */
+export async function adminGetAllBoatsApiV1BoatsAdminAllGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminGetAllBoatsApiV1BoatsAdminAllGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponsePaginatedDataAdminBoatListItemSchema_>('/api/v1/boats/admin/all', {
+    method: 'GET',
+    params: {
+      // page has a default value: 1
+      page: '1',
+      // page_size has a default value: 10
+      page_size: '10',
+
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
+/** 管理员获取船只统计 管理员获取船只统计
+
+包含：
+- 各状态船只数量统计
+- 总预约数量和收入统计
+- 平台船只使用情况分析 GET /api/v1/boats/admin/statistics */
+export async function adminGetBoatStatisticsApiV1BoatsAdminStatisticsGet(options?: {
+  [key: string]: any
+}) {
+  return request<API.ApiResponseDict_>('/api/v1/boats/admin/statistics', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
 /** 获取可用船只列表 获取可用船只列表（用户端）
 
 - **boat_type**: 船只类型过滤（可选）

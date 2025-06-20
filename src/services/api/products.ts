@@ -41,6 +41,103 @@ export async function getProductDetailApiV1ProductsProductIdGet(
   })
 }
 
+/** 管理员获取商品详情 管理员获取商品详情
+
+包含完整的商品信息、商家信息、订单统计、最近订单记录等 GET /api/v1/products/admin/${param0} */
+export async function adminGetProductDetailApiV1ProductsAdminProductIdGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminGetProductDetailApiV1ProductsAdminProductIdGetParams,
+  options?: { [key: string]: any }
+) {
+  const { product_id: param0, ...queryParams } = params
+  return request<API.ApiResponseAdminProductDetailSchema_>(`/api/v1/products/admin/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  })
+}
+
+/** 管理员操作商品 管理员操作商品
+
+- **operation**: 操作类型（必填）
+  - deactivate: 下架商品（设为停售状态）
+  - activate: 上架商品（设为可售状态）
+  - sold_out: 设置售罄状态
+- **reason**: 操作原因（必填）
+- **notes**: 管理员备注（可选）
+
+用于处理违规商品或管理商品状态
+操作记录会保存在商品描述中 POST /api/v1/products/admin/${param0}/operate */
+export async function adminOperateProductApiV1ProductsAdminProductIdOperatePost(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminOperateProductApiV1ProductsAdminProductIdOperatePostParams,
+  body: API.AdminProductOperationSchema,
+  options?: { [key: string]: any }
+) {
+  const { product_id: param0, ...queryParams } = params
+  return request<API.ApiResponseProductResponseSchema_>(
+    `/api/v1/products/admin/${param0}/operate`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: { ...queryParams },
+      data: body,
+      ...(options || {}),
+    }
+  )
+}
+
+/** 管理员获取所有商品 管理员获取所有商品列表
+
+- **merchant_id**: 商家ID过滤（可选）
+- **category**: 商品分类过滤（可选）
+- **status**: 状态过滤（可选）
+- **name**: 商品名称搜索（可选）
+- **min_price**: 最低价格（可选）
+- **max_price**: 最高价格（可选）
+- **low_stock**: 低库存筛选（可选）
+
+包含商家信息、订单统计、销售统计等完整数据 GET /api/v1/products/admin/all */
+export async function adminGetAllProductsApiV1ProductsAdminAllGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.adminGetAllProductsApiV1ProductsAdminAllGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponsePaginatedDataAdminProductListItemSchema_>(
+    '/api/v1/products/admin/all',
+    {
+      method: 'GET',
+      params: {
+        // page has a default value: 1
+        page: '1',
+        // page_size has a default value: 10
+        page_size: '10',
+
+        ...params,
+      },
+      ...(options || {}),
+    }
+  )
+}
+
+/** 管理员获取商品统计 管理员获取商品统计
+
+包含：
+- 各状态商品数量统计
+- 低库存商品统计
+- 各分类商品分布
+- 总订单数和销售额统计 GET /api/v1/products/admin/statistics */
+export async function adminGetProductStatisticsApiV1ProductsAdminStatisticsGet(options?: {
+  [key: string]: any
+}) {
+  return request<API.ApiResponseDict_>('/api/v1/products/admin/statistics', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
 /** 按分类获取商品 按分类获取商品列表（用户端） GET /api/v1/products/category/${param0} */
 export async function getProductsByCategoryApiV1ProductsCategoryCategoryGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

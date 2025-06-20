@@ -350,6 +350,103 @@ export async function getMyBookingsApiV1BookingsMyGet(
   })
 }
 
+/** 支付预约 模拟支付船艇预约（用户端）
+
+- **booking_id**: 预约ID（必填）
+- **payment_method**: 支付方式（默认为模拟支付）
+- **payment_notes**: 支付备注（可选）
+
+支付规则：
+- 只能支付自己的预约订单
+- 只能支付待确认或已确认状态的预约
+- 已支付的订单不能重复支付
+- 模拟支付会立即成功
+
+注意：支付成功不会自动确认预约，仍需等待商家确认 POST /api/v1/bookings/payment */
+export async function simulatePaymentApiV1BookingsPaymentPost(
+  body: API.PaymentRequestSchema,
+  options?: { [key: string]: any }
+) {
+  return request<API.app_schemas_response_ApiResponsePaymentResponseSchema_1>(
+    '/api/v1/bookings/payment',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    }
+  )
+}
+
+/** 获取支付记录 获取用户支付记录（用户端）
+
+返回用户的所有支付记录，包括已支付和已退款的订单 GET /api/v1/bookings/payment/records */
+export async function getUserPaymentRecordsApiV1BookingsPaymentRecordsGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getUserPaymentRecordsApiV1BookingsPaymentRecordsGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponsePaginatedDataPaymentStatusResponseSchema_>(
+    '/api/v1/bookings/payment/records',
+    {
+      method: 'GET',
+      params: {
+        // page has a default value: 1
+        page: '1',
+        // page_size has a default value: 10
+        page_size: '10',
+        ...params,
+      },
+      ...(options || {}),
+    }
+  )
+}
+
+/** 申请退款 申请预约退款（用户端）
+
+- **booking_id**: 预约ID（必填）
+- **refund_reason**: 退款原因（必填，5-500字符）
+
+退款规则：
+- 只能退款已支付的订单
+- 服务进行中或已完成的订单不能退款
+- 退款会自动取消预约
+- 模拟退款会立即成功 POST /api/v1/bookings/payment/refund */
+export async function requestRefundApiV1BookingsPaymentRefundPost(
+  body: API.RefundRequestSchema,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponseRefundResponseSchema_>('/api/v1/bookings/payment/refund', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** 查询支付状态 查询预约支付状态（用户端）
+
+返回预约的支付状态和基本信息 GET /api/v1/bookings/payment/status/${param0} */
+export async function getPaymentStatusApiV1BookingsPaymentStatusBookingIdGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getPaymentStatusApiV1BookingsPaymentStatusBookingIdGetParams,
+  options?: { [key: string]: any }
+) {
+  const { booking_id: param0, ...queryParams } = params
+  return request<API.ApiResponsePaymentStatusResponseSchema_>(
+    `/api/v1/bookings/payment/status/${param0}`,
+    {
+      method: 'GET',
+      params: { ...queryParams },
+      ...(options || {}),
+    }
+  )
+}
+
 /** 创建船员评价 对船员进行评价（用户端）
 
 - **booking_id**: 预约ID（必填）
