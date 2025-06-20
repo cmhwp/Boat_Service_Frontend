@@ -222,6 +222,51 @@ const router = createRouter({
           path: 'users',
           name: 'AdminUsers',
           component: () => import('@/views/admin/UsersView.vue'),
+          meta: {
+            title: '用户管理 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'admin',
+          },
+        },
+        {
+          path: 'products',
+          name: 'AdminProducts',
+          component: () => import('@/views/admin/ProductsView.vue'),
+          meta: {
+            title: '商品管理 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'admin',
+          },
+        },
+        {
+          path: 'boats',
+          name: 'AdminBoats',
+          component: () => import('@/views/admin/BoatsView.vue'),
+          meta: {
+            title: '船艇管理 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'admin',
+          },
+        },
+        {
+          path: 'orders',
+          name: 'AdminOrders',
+          component: () => import('@/views/admin/OrdersView.vue'),
+          meta: {
+            title: '订单管理 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'admin',
+          },
+        },
+        {
+          path: 'appointments',
+          name: 'AdminAppointments',
+          component: () => import('@/views/admin/AppointmentsView.vue'),
+          meta: {
+            title: '预约管理 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'admin',
+          },
         },
       ],
     },

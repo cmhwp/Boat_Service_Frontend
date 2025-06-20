@@ -66,9 +66,10 @@
               <el-icon><ship /></el-icon>
               <span>业务管理</span>
             </template>
+            <el-menu-item index="/admin/products">商品管理</el-menu-item>
             <el-menu-item index="/admin/boats">船艇管理</el-menu-item>
             <el-menu-item index="/admin/orders">订单管理</el-menu-item>
-            <el-menu-item index="/admin/routes">航线管理</el-menu-item>
+            <el-menu-item index="/admin/appointments">预约管理</el-menu-item>
           </el-sub-menu>
 
           <el-sub-menu index="system">
