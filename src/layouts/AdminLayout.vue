@@ -68,14 +68,14 @@
             <el-menu-item index="/admin/appointments">预约管理</el-menu-item>
           </el-sub-menu>
 
-          <el-sub-menu index="system">
+          <!-- <el-sub-menu index="system">
             <template #title>
               <el-icon><setting /></el-icon>
               <span>系统管理</span>
             </template>
             <el-menu-item index="/admin/settings">系统设置</el-menu-item>
             <el-menu-item index="/admin/logs">操作日志</el-menu-item>
-          </el-sub-menu>
+          </el-sub-menu> -->
         </el-menu>
       </el-aside>
 
