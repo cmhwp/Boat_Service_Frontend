@@ -70,8 +70,7 @@
             </template>
             <el-menu-item index="/merchant/orders">订单列表</el-menu-item>
           </el-sub-menu>
-
-          <el-menu-item index="/merchant/routes">
+          <!-- <el-menu-item index="/merchant/routes">
             <el-icon><map-road /></el-icon>
             <span>航线管理</span>
           </el-menu-item>
@@ -84,7 +83,7 @@
           <el-menu-item index="/merchant/settings">
             <el-icon><setting /></el-icon>
             <span>店铺设置</span>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-menu>
       </el-aside>
 

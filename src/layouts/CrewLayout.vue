@@ -52,11 +52,9 @@
               <span>工作任务</span>
             </template>
             <el-menu-item index="/crew/tasks">任务列表</el-menu-item>
-            <el-menu-item index="/crew/tasks/current">当前任务</el-menu-item>
-            <el-menu-item index="/crew/tasks/completed">已完成任务</el-menu-item>
           </el-sub-menu>
 
-          <el-menu-item index="/crew/schedule">
+          <!-- <el-menu-item index="/crew/schedule">
             <el-icon><calendar /></el-icon>
             <span>工作排班</span>
           </el-menu-item>
@@ -79,7 +77,7 @@
           <el-menu-item index="/crew/reports">
             <el-icon><document /></el-icon>
             <span>工作报告</span>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-menu>
       </el-aside>
 
