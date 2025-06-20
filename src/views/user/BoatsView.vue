@@ -12,12 +12,11 @@
     <div class="search-section">
       <el-card>
         <el-form :model="searchForm" :inline="true" class="search-form">
-          <el-form-item label="船只类型">
+          <el-form-item label="船只类型" class="w-full">
             <el-select v-model="searchForm.boat_type" placeholder="请选择船只类型" clearable>
-              <el-option label="观光船" value="观光船" />
-              <el-option label="快艇" value="快艇" />
-              <el-option label="游轮" value="游轮" />
-              <el-option label="帆船" value="帆船" />
+              <el-option label="观光船" value="passenger" />
+              <el-option label="快艇" value="sightseeing" />
+              <el-option label="钓鱼船" value="fishing" />
             </el-select>
           </el-form-item>
 
@@ -39,7 +38,7 @@
             />
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item class="w-full">
             <el-button type="primary" @click="searchBoats" :loading="loading">
               <search theme="outline" size="14" />
               搜索
@@ -87,7 +86,7 @@
                   </template>
                 </el-image>
                 <div class="boat-type-tag">
-                  <el-tag size="small">{{ boat.boat_type }}</el-tag>
+                  <el-tag size="small">{{ boatTypeMap[boat.boat_type as API.BoatType] }}</el-tag>
                 </div>
               </div>
 
@@ -98,7 +97,7 @@
 
                 <div class="boat-details">
                   <div class="detail-item">
-                    <user-group theme="outline" size="16" />
+                    <PeoplesTwo theme="outline" size="16" />
                     <span>载客量：{{ boat.capacity }}人</span>
                   </div>
                   <div class="detail-item">
@@ -106,7 +105,7 @@
                     <span class="hourly-rate">¥{{ boat.hourly_rate }}/小时</span>
                   </div>
                   <div v-if="boat.current_location" class="detail-item">
-                    <location theme="outline" size="16" />
+                    <Local theme="outline" size="16" />
                     <span>位置：{{ boat.current_location }}</span>
                   </div>
                 </div>
@@ -115,7 +114,10 @@
                 <div class="merchant-info">
                   <el-avatar :size="24" :src="boat.merchant?.avatar" :icon="UserFilled" />
                   <span class="merchant-name">{{
-                    boat.merchant?.business_name || boat.merchant?.username
+                    boat.merchant?.business_name ||
+                    boat.merchant?.merchant_name ||
+                    boat.merchant?.username ||
+                    '未知商家'
                   }}</span>
                   <el-rate
                     v-if="boat.merchant?.rating"
@@ -123,6 +125,9 @@
                     disabled
                     size="small"
                   />
+                  <el-tag v-if="boat.merchant?.contact_phone" size="small" type="info">
+                    {{ boat.merchant.contact_phone }}
+                  </el-tag>
                 </div>
 
                 <!-- 操作按钮 -->
@@ -168,8 +173,9 @@ import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { UserFilled } from '@element-plus/icons-vue'
-import { Ship, Search, Currency, LocalTwo } from '@icon-park/vue-next'
+import { Ship, Search, Currency, Local, PeoplesTwo } from '@icon-park/vue-next'
 import { getAvailableBoatsApiV1BoatsAvailableGet } from '@/services/api/boats'
+import { getUserInfoByMerchantApiV1UsersInfoByMerchantGet } from '@/services/api/users'
 import QuickBookingDialog from '@/components/QuickBookingDialog.vue'
 
 const router = useRouter()
@@ -179,6 +185,7 @@ const loading = ref(false)
 const boats = ref<any[]>([])
 const bookingDialogVisible = ref(false)
 const selectedBoat = ref<any>(null)
+const merchantsInfo = ref<Map<number, any>>(new Map()) // 存储商家信息
 
 // 搜索表单
 const searchForm = reactive({
@@ -193,6 +200,27 @@ const pagination = reactive({
   page_size: 12,
   total: 0,
 })
+
+// 获取商家信息
+const fetchMerchantInfo = async (merchantId: number) => {
+  try {
+    if (merchantsInfo.value.has(merchantId)) {
+      return merchantsInfo.value.get(merchantId)
+    }
+
+    const response = await getUserInfoByMerchantApiV1UsersInfoByMerchantGet({
+      merchant_id: merchantId,
+    })
+    console.log(response)
+    if (response.data?.success && response.data.data) {
+      merchantsInfo.value.set(merchantId, response.data.data)
+      return response.data.data
+    }
+  } catch (error) {
+    console.error(`获取商家信息失败 (ID: ${merchantId}):`, error)
+  }
+  return null
+}
 
 // 获取船只列表
 const fetchBoats = async () => {
@@ -215,10 +243,32 @@ const fetchBoats = async () => {
     }
 
     const response = await getAvailableBoatsApiV1BoatsAvailableGet(params)
+    console.log(response)
 
     if (response.data?.success && response.data.data) {
       boats.value = response.data.data.items || []
       pagination.total = response.data.data.total || 0
+
+      // 获取所有船只对应的商家信息
+      const merchantIds = boats.value
+        .map((boat) => boat.merchant_id)
+        .filter((id) => id && !merchantsInfo.value.has(id))
+
+      if (merchantIds.length > 0) {
+        // 并行获取所有商家信息
+        await Promise.all(merchantIds.map((merchantId) => fetchMerchantInfo(merchantId)))
+
+        // 将商家信息附加到船只数据中
+        boats.value = boats.value.map((boat) => {
+          if (boat.merchant_id && merchantsInfo.value.has(boat.merchant_id)) {
+            return {
+              ...boat,
+              merchant: merchantsInfo.value.get(boat.merchant_id),
+            }
+          }
+          return boat
+        })
+      }
     }
   } catch (error) {
     console.error('获取船只列表失败:', error)
@@ -276,6 +326,12 @@ const handleCurrentChange = (val: number) => {
 onMounted(() => {
   fetchBoats()
 })
+//映射
+const boatTypeMap: Record<API.BoatType, string> = {
+  passenger: '观光船',
+  sightseeing: '快艇',
+  fishing: '钓鱼船',
+}
 </script>
 
 <style scoped>
@@ -302,7 +358,9 @@ onMounted(() => {
   font-size: 16px;
   color: #666;
 }
-
+.w-full {
+  width: 15%;
+}
 .search-section {
   margin-bottom: 24px;
 }
@@ -416,12 +474,17 @@ onMounted(() => {
   padding: 12px;
   background: #fafafa;
   border-radius: 6px;
+  flex-wrap: wrap;
 }
 
 .merchant-name {
   font-size: 14px;
   color: #333;
   flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .boat-actions {

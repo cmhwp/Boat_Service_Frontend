@@ -75,7 +75,7 @@ export async function deleteUserApiV1UsersUserIdDelete(
   })
 }
 
-/** 删除用户头像 删除当前用户的头像 DELETE /api/v1/users/avatar */
+/** 删除用户头像 删除用户头像 DELETE /api/v1/users/avatar */
 export async function deleteAvatarApiV1UsersAvatarDelete(options?: { [key: string]: any }) {
   return request<API.ApiResponseDict_>('/api/v1/users/avatar', {
     method: 'DELETE',
@@ -113,6 +113,64 @@ export async function forgotPasswordApiV1UsersForgotPasswordPost(
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  })
+}
+
+/** 根据船员ID获取用户信息 根据船员ID获取用户信息
+
+- **crew_id**: 船员ID
+
+返回船员关联的用户信息，包括头像、用户名和船员详细信息 GET /api/v1/users/info/by-crew */
+export async function getUserInfoByCrewApiV1UsersInfoByCrewGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getUserInfoByCrewApiV1UsersInfoByCrewGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponseDict_>('/api/v1/users/info/by-crew', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
+/** 根据商家ID获取用户信息 根据商家ID获取用户信息
+
+- **merchant_id**: 商家ID
+
+返回商家关联的用户信息，包括头像、用户名和商家详细信息 GET /api/v1/users/info/by-merchant */
+export async function getUserInfoByMerchantApiV1UsersInfoByMerchantGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getUserInfoByMerchantApiV1UsersInfoByMerchantGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponseDict_>('/api/v1/users/info/by-merchant', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  })
+}
+
+/** 根据角色ID获取用户信息 根据商家ID或船员ID获取用户信息
+
+- **merchant_id**: 商家ID（与crew_id二选一）
+- **crew_id**: 船员ID（与merchant_id二选一）
+
+返回对应角色的用户信息，包括头像、用户名和角色详细信息 GET /api/v1/users/info/by-role */
+export async function getUserInfoByRoleApiV1UsersInfoByRoleGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getUserInfoByRoleApiV1UsersInfoByRoleGetParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ApiResponseDict_>('/api/v1/users/info/by-role', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   })
 }

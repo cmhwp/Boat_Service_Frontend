@@ -1922,6 +1922,23 @@ declare namespace API {
     user_id: number
   }
 
+  type getUserInfoByCrewApiV1UsersInfoByCrewGetParams = {
+    /** 船员ID */
+    crew_id: number
+  }
+
+  type getUserInfoByMerchantApiV1UsersInfoByMerchantGetParams = {
+    /** 商家ID */
+    merchant_id: number
+  }
+
+  type getUserInfoByRoleApiV1UsersInfoByRoleGetParams = {
+    /** 商家ID */
+    merchant_id?: number | null
+    /** 船员ID */
+    crew_id?: number | null
+  }
+
   type getUserPaymentRecordsApiV1BookingsPaymentRecordsGetParams = {
     /** 页码 */
     page?: number

@@ -168,8 +168,21 @@
             <div class="merchant-content">
               <el-avatar :size="60" :src="booking.merchant?.avatar" :icon="UserFilled" />
               <div class="merchant-details">
-                <h4>{{ booking.merchant?.merchant_name || booking.merchant?.username }}</h4>
+                <h4>
+                  {{
+                    booking.merchant?.business_name ||
+                    booking.merchant?.merchant_name ||
+                    booking.merchant?.username ||
+                    '未知商家'
+                  }}
+                </h4>
                 <p v-if="booking.merchant?.address">地址：{{ booking.merchant.address }}</p>
+                <p v-if="booking.merchant?.contact_phone">
+                  联系电话：{{ booking.merchant.contact_phone }}
+                </p>
+                <p v-if="booking.merchant?.description" class="merchant-description">
+                  {{ booking.merchant.description }}
+                </p>
                 <div class="merchant-stats">
                   <el-rate
                     v-if="booking.merchant?.rating"
@@ -194,12 +207,22 @@
             <div class="crew-content">
               <el-avatar :size="60" :src="booking.assigned_crew.avatar" :icon="UserFilled" />
               <div class="crew-details">
-                <h4>{{ booking.assigned_crew.username }}</h4>
-                <p v-if="booking.assigned_crew.phone">
-                  联系电话：{{ booking.assigned_crew.phone }}
+                <h4>
+                  {{ booking.assigned_crew.username|| '未知船员' }}
+                </h4>
+                <p v-if="booking.assigned_crew.phone || booking.assigned_crew.contact_phone">
+                  联系电话：{{ booking.assigned_crew.phone || booking.assigned_crew.contact_phone }}
                 </p>
-                <div v-if="booking.assigned_crew.rating" class="crew-rating">
-                  <el-rate :value="booking.assigned_crew.rating" disabled show-score />
+                <p v-if="booking.assigned_crew.boat_license">
+                  证书编号：{{ booking.assigned_crew.boat_license }}
+                </p>
+                <div class="crew-stats">
+                  <el-rate
+                    v-if="booking.assigned_crew.rating"
+                    v-model="booking.assigned_crew.rating"
+                    disabled
+                    show-score
+                  />
                 </div>
               </div>
 
@@ -259,6 +282,10 @@ import {
   getBookingDetailApiV1BookingsBookingIdGet,
   cancelBookingApiV1BookingsBookingIdCancelPatch,
 } from '@/services/api/bookings'
+import {
+  getUserInfoByMerchantApiV1UsersInfoByMerchantGet,
+  getUserInfoByCrewApiV1UsersInfoByCrewGet,
+} from '@/services/api/users'
 
 const route = useRoute()
 const router = useRouter()
@@ -283,6 +310,40 @@ const canRate = computed(() => {
   )
 })
 
+// 获取商家信息
+const fetchMerchantInfo = async (merchantId: number) => {
+  try {
+    const response = await getUserInfoByMerchantApiV1UsersInfoByMerchantGet({
+      merchant_id: merchantId,
+    })
+    console.log('商家信息响应:', response)
+
+    if (response.data?.success && response.data.data) {
+      return response.data.data
+    }
+  } catch (error) {
+    console.error(`获取商家信息失败 (ID: ${merchantId}):`, error)
+  }
+  return null
+}
+
+// 获取船员信息
+const fetchCrewInfo = async (crewId: number) => {
+  try {
+    const response = await getUserInfoByCrewApiV1UsersInfoByCrewGet({
+      crew_id: crewId,
+    })
+    console.log('船员信息响应:', response)
+
+    if (response.data?.success && response.data.data) {
+      return response.data.data
+    }
+  } catch (error) {
+    console.error(`获取船员信息失败 (ID: ${crewId}):`, error)
+  }
+  return null
+}
+
 // 获取预约详情
 const fetchBookingDetail = async () => {
   try {
@@ -291,9 +352,53 @@ const fetchBookingDetail = async () => {
     const response = await getBookingDetailApiV1BookingsBookingIdGet({
       booking_id: parseInt(bookingId),
     })
-    console.log(response)
+    console.log('预约详情响应:', response)
+
     if (response.data?.success && response.data.data) {
       booking.value = response.data.data
+
+      // 并行获取商家和船员信息
+      const promises = []
+
+      // 如果有商家ID，获取完整的商家信息
+      if (booking.value.merchant_id) {
+        promises.push(
+          fetchMerchantInfo(booking.value.merchant_id).then((merchantInfo) => {
+            if (merchantInfo && booking.value) {
+              booking.value = {
+                ...booking.value,
+                merchant: {
+                  ...booking.value.merchant,
+                  ...merchantInfo,
+                },
+              }
+            }
+          }),
+        )
+      }
+
+      // 如果有指派的船员ID，获取完整的船员信息
+      if (booking.value.assigned_crew_id) {
+        promises.push(
+          fetchCrewInfo(booking.value.assigned_crew_id).then((crewInfo) => {
+            if (crewInfo && booking.value) {
+              booking.value = {
+                ...booking.value,
+                assigned_crew: {
+                  ...booking.value.assigned_crew,
+                  ...crewInfo,
+                },
+              }
+            }
+          }),
+        )
+      }
+
+      // 等待所有信息获取完成
+      if (promises.length > 0) {
+        await Promise.all(promises)
+        console.log('合并后的预约数据:', booking.value)
+      }
     } else {
       booking.value = null
     }
@@ -614,10 +719,37 @@ onMounted(() => {
   color: #666;
 }
 
+.merchant-description {
+  font-size: 14px;
+  color: #999;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 .merchant-stats {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.crew-specialties {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.crew-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
 }
 
 .crew-actions {

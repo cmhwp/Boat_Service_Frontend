@@ -107,9 +107,19 @@
               <div class="merchant-basic">
                 <el-avatar :size="60" :src="boat.merchant?.avatar" :icon="UserFilled" />
                 <div class="merchant-details">
-                  <h4>{{ boat.merchant?.business_name || boat.merchant?.username }}</h4>
-                  <p v-if="boat.merchant?.business_address">
-                    地址：{{ boat.merchant.business_address }}
+                  <h4>
+                    {{
+                      boat.merchant?.business_name ||
+                      boat.merchant?.merchant_name ||
+                      boat.merchant?.username ||
+                      '未知商家'
+                    }}
+                  </h4>
+                  <p v-if="boat.merchant?.address || boat.merchant?.business_address">
+                    地址：{{ boat.merchant.address || boat.merchant.business_address }}
+                  </p>
+                  <p v-if="boat.merchant?.contact_phone">
+                    联系电话：{{ boat.merchant.contact_phone }}
                   </p>
                   <div class="merchant-stats">
                     <el-rate
@@ -244,6 +254,7 @@ import { UserFilled } from '@element-plus/icons-vue'
 import { Ship } from '@icon-park/vue-next'
 import { getBoatDetailApiV1BoatsBoatIdGet } from '@/services/api/boats'
 import { createBookingApiV1BookingsPost } from '@/services/api/bookings'
+import { getUserInfoByMerchantApiV1UsersInfoByMerchantGet } from '@/services/api/users'
 
 const route = useRoute()
 const router = useRouter()
@@ -289,6 +300,23 @@ const estimatedFee = computed(() => {
   return estimatedHours.value * boat.value.hourly_rate
 })
 
+// 获取商家信息
+const fetchMerchantInfo = async (merchantId: number) => {
+  try {
+    const response = await getUserInfoByMerchantApiV1UsersInfoByMerchantGet({
+      merchant_id: merchantId,
+    })
+    console.log('商家信息响应:', response)
+
+    if (response.data?.success && response.data.data) {
+      return response.data.data
+    }
+  } catch (error) {
+    console.error(`获取商家信息失败 (ID: ${merchantId}):`, error)
+  }
+  return null
+}
+
 // 获取船只详情
 const fetchBoatDetail = async () => {
   try {
@@ -297,9 +325,26 @@ const fetchBoatDetail = async () => {
     const response = await getBoatDetailApiV1BoatsBoatIdGet({
       boat_id: parseInt(boatId),
     })
+    console.log('船只详情响应:', response)
 
     if (response.data?.success && response.data.data) {
       boat.value = response.data.data
+
+      // 如果有商家ID，获取完整的商家信息
+      if (boat.value.merchant_id) {
+        const merchantInfo = await fetchMerchantInfo(boat.value.merchant_id)
+        if (merchantInfo) {
+          // 将获取到的商家信息合并到船只数据中
+          boat.value = {
+            ...boat.value,
+            merchant: {
+              ...boat.value.merchant,
+              ...merchantInfo,
+            },
+          }
+          console.log('合并后的船只数据:', boat.value)
+        }
+      }
     } else {
       boat.value = null
     }
@@ -501,6 +546,11 @@ onMounted(() => {
   margin: 0;
   color: #666;
   line-height: 1.6;
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .booking-card {

@@ -204,33 +204,65 @@ const stats = ref({
 // 计算属性
 const userInfo = computed(() => authStore.user)
 
+// 获取所有预约数据（分页获取）
+const fetchAllBookings = async () => {
+  const allBookings: API.BookingListItemSchema[] = []
+  let currentPage = 1
+  const pageSize = 100 // 使用最大允许的分页大小
+
+  try {
+    while (true) {
+      const response = await getMyBookingsApiV1BookingsMyGet({
+        page: currentPage,
+        page_size: pageSize,
+      })
+
+      if (response.data?.success && response.data.data) {
+        const items = response.data.data.items || []
+        allBookings.push(...items)
+
+        // 如果返回的数据少于页面大小，说明已经是最后一页
+        if (items.length < pageSize) {
+          break
+        }
+
+        currentPage++
+      } else {
+        break
+      }
+    }
+  } catch (error) {
+    console.error('获取预约数据失败:', error)
+    throw error
+  }
+
+  return allBookings
+}
+
 // 获取最近预约
 const fetchRecentBookings = async () => {
   try {
     loading.value = true
-    const response = await getMyBookingsApiV1BookingsMyGet({
+
+    // 获取最近5条预约记录
+    const recentResponse = await getMyBookingsApiV1BookingsMyGet({
       page: 1,
       page_size: 5,
     })
 
-    if (response.data?.success && response.data.data) {
-      recentBookings.value = response.data.data.items || []
+    if (recentResponse.data?.success && recentResponse.data.data) {
+      recentBookings.value = recentResponse.data.data.items || []
+    }
 
-      // 计算统计数据
-      const allBookingsResponse = await getMyBookingsApiV1BookingsMyGet({
-        page: 1,
-        page_size: 1000,
-      })
+    // 获取所有预约数据来计算统计信息
+    const allBookings = await fetchAllBookings()
 
-      if (allBookingsResponse.data?.success && allBookingsResponse.data.data) {
-        const allBookings = allBookingsResponse.data.data.items || []
-        stats.value = {
-          pending: allBookings.filter((b) => b.status === 'pending').length,
-          confirmed: allBookings.filter((b) => b.status === 'confirmed').length,
-          completed: allBookings.filter((b) => b.status === 'completed').length,
-          total: allBookings.length,
-        }
-      }
+    // 计算统计数据
+    stats.value = {
+      pending: allBookings.filter((b) => b.status === 'pending').length,
+      confirmed: allBookings.filter((b) => b.status === 'confirmed').length,
+      completed: allBookings.filter((b) => b.status === 'completed').length,
+      total: allBookings.length,
     }
   } catch (error) {
     console.error('获取预约列表失败:', error)
