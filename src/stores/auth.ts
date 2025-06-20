@@ -56,6 +56,11 @@ export const useAuthStore = defineStore('auth', () => {
   // 计算属性
   const isAuthenticated = computed(() => !!token.value && !!user.value)
   const userInfo = computed(() => user.value)
+  const userRole = computed(() => user.value?.role || null)
+  const isAdmin = computed(() => userRole.value === 'admin')
+  const isMerchant = computed(() => userRole.value === 'merchant')
+  const isCrew = computed(() => userRole.value === 'crew')
+  const isUser = computed(() => userRole.value === 'user' || !userRole.value)
 
   // 登录
   const login = async (loginForm: LoginForm) => {
@@ -327,6 +332,11 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     loading,
     isAuthenticated,
+    userRole,
+    isAdmin,
+    isMerchant,
+    isCrew,
+    isUser,
 
     // 方法
     login,

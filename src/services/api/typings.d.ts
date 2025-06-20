@@ -433,7 +433,7 @@ declare namespace API {
   type ApiResponseBookingStatsSchema_ = {
     /** Code */
     code: number
-    data?: BookingStatsSchema | null
+    data?: app_schemas_booking_BookingStatsSchema | null
     /** Message */
     message: string
     /** Success */
@@ -504,6 +504,26 @@ declare namespace API {
     /** Code */
     code: number
     data?: CrewTaskStatsSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseDashboardChartsSchema_ = {
+    /** Code */
+    code: number
+    data?: DashboardChartsSchema | null
+    /** Message */
+    message: string
+    /** Success */
+    success: boolean
+  }
+
+  type ApiResponseDashboardOverviewSchema_ = {
+    /** Code */
+    code: number
+    data?: DashboardOverviewSchema | null
     /** Message */
     message: string
     /** Success */
@@ -616,7 +636,7 @@ declare namespace API {
   type ApiResponseOrderStatsSchema_ = {
     /** Code */
     code: number
-    data?: OrderStatsSchema | null
+    data?: app_schemas_order_OrderStatsSchema | null
     /** Message */
     message: string
     /** Success */
@@ -863,6 +883,23 @@ declare namespace API {
     success: boolean
   }
 
+  type app_schemas_booking_BookingStatsSchema = {
+    /** Total Bookings 总预约数 */
+    total_bookings: number
+    /** Pending Bookings 待确认预约数 */
+    pending_bookings: number
+    /** Confirmed Bookings 已确认预约数 */
+    confirmed_bookings: number
+    /** Completed Bookings 已完成预约数 */
+    completed_bookings: number
+    /** Cancelled Bookings 已取消预约数 */
+    cancelled_bookings: number
+    /** Total Revenue 总收入 */
+    total_revenue: number
+    /** Average Rating 平均评分 */
+    average_rating: number
+  }
+
   type app_schemas_booking_PaymentResponseSchema = {
     /** Booking Id 预约ID */
     booking_id: number
@@ -878,6 +915,67 @@ declare namespace API {
     payment_method: string
     /** Payment Notes 支付备注 */
     payment_notes?: string | null
+  }
+
+  type app_schemas_dashboard_BookingStatsSchema = {
+    /** Total Bookings 预约总数 */
+    total_bookings: number
+    /** Pending Bookings 待确认预约数 */
+    pending_bookings: number
+    /** Confirmed Bookings 已确认预约数 */
+    confirmed_bookings: number
+    /** Completed Bookings 已完成预约数 */
+    completed_bookings: number
+    /** Cancelled Bookings 已取消预约数 */
+    cancelled_bookings: number
+    /** Total Booking Amount 预约总金额 */
+    total_booking_amount: number
+    /** Paid Booking Amount 已支付预约金额 */
+    paid_booking_amount: number
+    /** Average Booking Duration 平均预约时长(小时) */
+    average_booking_duration: number
+    /** Recent Bookings 近7天预约数 */
+    recent_bookings: number
+  }
+
+  type app_schemas_dashboard_OrderStatsSchema = {
+    /** Total Orders 订单总数 */
+    total_orders: number
+    /** Pending Orders 待支付订单数 */
+    pending_orders: number
+    /** Paid Orders 已支付订单数 */
+    paid_orders: number
+    /** Completed Orders 已完成订单数 */
+    completed_orders: number
+    /** Cancelled Orders 已取消订单数 */
+    cancelled_orders: number
+    /** Total Order Amount 订单总金额 */
+    total_order_amount: number
+    /** Paid Amount 已支付金额 */
+    paid_amount: number
+    /** Platform Commission 平台抽成(5%) */
+    platform_commission: number
+    /** Recent Orders 近7天订单数 */
+    recent_orders: number
+  }
+
+  type app_schemas_order_OrderStatsSchema = {
+    /** Total Orders 订单总数 */
+    total_orders: number
+    /** Pending Orders 待支付订单数 */
+    pending_orders: number
+    /** Paid Orders 已支付订单数 */
+    paid_orders: number
+    /** Shipped Orders 已发货订单数 */
+    shipped_orders: number
+    /** Completed Orders 已完成订单数 */
+    completed_orders: number
+    /** Cancelled Orders 已取消订单数 */
+    cancelled_orders: number
+    /** Total Amount 订单总金额 */
+    total_amount: number
+    /** Paid Amount 已支付金额 */
+    paid_amount: number
   }
 
   type app_schemas_order_PaymentResponseSchema = {
@@ -1023,6 +1121,23 @@ declare namespace API {
     created_at: string
     /** Updated At 更新时间 */
     updated_at: string
+  }
+
+  type BoatStatsSchema = {
+    /** Total Boats 船舶总数 */
+    total_boats: number
+    /** Available Boats 可用船舶数 */
+    available_boats: number
+    /** In Use Boats 使用中船舶数 */
+    in_use_boats: number
+    /** Maintenance Boats 维护中船舶数 */
+    maintenance_boats: number
+    /** Inactive Boats 停用船舶数 */
+    inactive_boats: number
+    /** Type Distribution 类型分布 */
+    type_distribution: Record<string, any>
+    /** Average Hourly Rate 平均小时费率 */
+    average_hourly_rate: number
   }
 
   type BoatStatus = 'available' | 'in_use' | 'maintenance' | 'inactive'
@@ -1269,23 +1384,6 @@ declare namespace API {
     cancelled_at?: string | null
   }
 
-  type BookingStatsSchema = {
-    /** Total Bookings 总预约数 */
-    total_bookings: number
-    /** Pending Bookings 待确认预约数 */
-    pending_bookings: number
-    /** Confirmed Bookings 已确认预约数 */
-    confirmed_bookings: number
-    /** Completed Bookings 已完成预约数 */
-    completed_bookings: number
-    /** Cancelled Bookings 已取消预约数 */
-    cancelled_bookings: number
-    /** Total Revenue 总收入 */
-    total_revenue: number
-    /** Average Rating 平均评分 */
-    average_rating: number
-  }
-
   type BookingStatus =
     | 'pending'
     | 'confirmed'
@@ -1349,6 +1447,15 @@ declare namespace API {
     new_password: string
     /** Confirm Password */
     confirm_password: string
+  }
+
+  type ChartDataSchema = {
+    /** Labels 标签列表 */
+    labels: string[]
+    /** Data 数据列表 */
+    data: number[]
+    /** Title 图表标题 */
+    title: string
   }
 
   type checkBoatAvailabilityApiV1BookingsAvailabilityGetParams = {
@@ -1526,6 +1633,19 @@ declare namespace API {
     updated_at: string
   }
 
+  type CrewStatsSchema = {
+    /** Total Crews 船员总数 */
+    total_crews: number
+    /** Active Crews 活跃船员数 */
+    active_crews: number
+    /** Inactive Crews 非活跃船员数 */
+    inactive_crews: number
+    /** Average Rating 平均评分 */
+    average_rating: number
+    /** Total Ratings 评价总数 */
+    total_ratings: number
+  }
+
   type CrewStatus = 'active' | 'inactive'
 
   type CrewTaskDetailSchema = {
@@ -1632,6 +1752,44 @@ declare namespace API {
     rating?: number | null
   }
 
+  type DashboardChartsSchema = {
+    /** 用户增长图表 */
+    user_growth_chart: ChartDataSchema
+    /** 订单趋势图表 */
+    order_trend_chart: ChartDataSchema
+    /** 预约趋势图表 */
+    booking_trend_chart: ChartDataSchema
+    /** 收入图表 */
+    revenue_chart: ChartDataSchema
+    /** 商品分类饼图 */
+    category_pie_chart: ChartDataSchema
+    /** 船舶类型饼图 */
+    boat_type_pie_chart: ChartDataSchema
+  }
+
+  type DashboardOverviewSchema = {
+    /** 用户统计 */
+    user_stats: UserStatsSchema
+    /** 商家统计 */
+    merchant_stats: MerchantStatsSchema
+    /** 商品统计 */
+    product_stats: ProductStatsSchema
+    /** 船舶统计 */
+    boat_stats: BoatStatsSchema
+    /** 订单统计 */
+    order_stats: app_schemas_dashboard_OrderStatsSchema
+    /** 预约统计 */
+    booking_stats: app_schemas_dashboard_BookingStatsSchema
+    /** 船员统计 */
+    crew_stats: CrewStatsSchema
+    /** 财务统计 */
+    financial_stats: FinancialStatsSchema
+    /** 近期活动 */
+    recent_activity: RecentActivitySchema
+    /** Last Updated 最后更新时间 */
+    last_updated: string
+  }
+
   type deleteMyBoatApiV1BoatsMyBoatIdDeleteParams = {
     /** 船只ID */
     boat_id: number
@@ -1663,6 +1821,21 @@ declare namespace API {
     receiver_address: string
     /** User Notes 用户备注 */
     user_notes?: string | null
+  }
+
+  type FinancialStatsSchema = {
+    /** Total Revenue 总收入 */
+    total_revenue: number
+    /** Order Revenue 订单收入 */
+    order_revenue: number
+    /** Booking Revenue 预约收入 */
+    booking_revenue: number
+    /** Platform Commission 平台抽成 */
+    platform_commission: number
+    /** Merchant Earnings 商家收入 */
+    merchant_earnings: number
+    /** Crew Earnings 船员收入 */
+    crew_earnings: number
   }
 
   type ForgotPasswordSchema = {
@@ -2102,6 +2275,19 @@ declare namespace API {
     updated_at: string
   }
 
+  type MerchantStatsSchema = {
+    /** Total Merchants 商家总数 */
+    total_merchants: number
+    /** Active Merchants 活跃商家数 */
+    active_merchants: number
+    /** Pending Merchants 待审核商家数 */
+    pending_merchants: number
+    /** Suspended Merchants 暂停商家数 */
+    suspended_merchants: number
+    /** Recent Applications 近7天申请数 */
+    recent_applications: number
+  }
+
   type MerchantStatus = 'pending' | 'active' | 'suspended'
 
   type MerchantUpdateSchema = {
@@ -2276,25 +2462,6 @@ declare namespace API {
     completed_at?: string | null
     /** Cancelled At 取消时间 */
     cancelled_at?: string | null
-  }
-
-  type OrderStatsSchema = {
-    /** Total Orders 订单总数 */
-    total_orders: number
-    /** Pending Orders 待支付订单数 */
-    pending_orders: number
-    /** Paid Orders 已支付订单数 */
-    paid_orders: number
-    /** Shipped Orders 已发货订单数 */
-    shipped_orders: number
-    /** Completed Orders 已完成订单数 */
-    completed_orders: number
-    /** Cancelled Orders 已取消订单数 */
-    cancelled_orders: number
-    /** Total Amount 订单总金额 */
-    total_amount: number
-    /** Paid Amount 已支付金额 */
-    paid_amount: number
   }
 
   type OrderStatus =
@@ -2670,6 +2837,23 @@ declare namespace API {
     updated_at: string
   }
 
+  type ProductStatsSchema = {
+    /** Total Products 商品总数 */
+    total_products: number
+    /** Available Products 可售商品数 */
+    available_products: number
+    /** Sold Out Products 售罄商品数 */
+    sold_out_products: number
+    /** Inactive Products 下架商品数 */
+    inactive_products: number
+    /** Low Stock Products 低库存商品数(<=10) */
+    low_stock_products: number
+    /** Category Distribution 分类分布 */
+    category_distribution: Record<string, any>
+    /** Total Sales Amount 总销售额 */
+    total_sales_amount: number
+  }
+
   type ProductStatus = 'available' | 'sold_out' | 'inactive'
 
   type ProductStockUpdateSchema = {
@@ -2745,6 +2929,19 @@ declare namespace API {
   }
 
   type RealnameStatus = 'unverified' | 'pending' | 'verified'
+
+  type RecentActivitySchema = {
+    /** Recent Users 近7天新用户 */
+    recent_users: number
+    /** Recent Merchants 近7天新商家 */
+    recent_merchants: number
+    /** Recent Orders 近7天新订单 */
+    recent_orders: number
+    /** Recent Bookings 近7天新预约 */
+    recent_bookings: number
+    /** Recent Products 近7天新商品 */
+    recent_products: number
+  }
 
   type RefundRequestSchema = {
     /** Booking Id 预约ID */
@@ -2896,6 +3093,23 @@ declare namespace API {
   }
 
   type UserRole = 'user' | 'crew' | 'merchant' | 'admin'
+
+  type UserStatsSchema = {
+    /** Total Users 用户总数 */
+    total_users: number
+    /** Active Users 活跃用户数 */
+    active_users: number
+    /** Inactive Users 非活跃用户数 */
+    inactive_users: number
+    /** Verified Users 实名认证用户数 */
+    verified_users: number
+    /** Pending Verification 待认证用户数 */
+    pending_verification: number
+    /** Role Distribution 角色分布 */
+    role_distribution: Record<string, any>
+    /** Recent Registrations 近7天注册用户数 */
+    recent_registrations: number
+  }
 
   type UserUpdateSchema = {
     /** Phone */

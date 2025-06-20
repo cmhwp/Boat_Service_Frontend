@@ -286,7 +286,7 @@ const loading = ref(false)
 const statsLoading = ref(false)
 const updating = ref(false)
 const orders = ref<API.OrderDetailSchema[]>([])
-const stats = ref<API.OrderStatsSchema>({
+const stats = ref<API.app_schemas_order_OrderStatsSchema>({
   total_orders: 0,
   pending_orders: 0,
   paid_orders: 0,

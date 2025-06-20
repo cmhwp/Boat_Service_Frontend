@@ -11,13 +11,14 @@
       </div>
 
       <div class="header-right">
+        <el-button type="primary" size="small" @click="goToFrontend" class="frontend-btn">
+          <el-icon><HomeFilled /></el-icon>
+          返回前台
+        </el-button>
+
         <el-dropdown @command="handleCommand">
           <span class="user-info">
-            <el-avatar
-              :size="32"
-              :src="userInfo?.avatar || undefined"
-              :icon="UserFilled"
-            />
+            <el-avatar :size="32" :src="userInfo?.avatar || undefined" :icon="UserFilled" />
             <span class="username">{{ userInfo?.username || '管理员' }}</span>
             <el-icon class="dropdown-arrow"><arrow-down /></el-icon>
           </span>
@@ -36,11 +37,7 @@
     <el-container class="admin-container">
       <!-- 侧边导航栏 -->
       <el-aside class="admin-aside" width="250px">
-        <el-menu
-          :default-active="activeMenu"
-          class="admin-menu"
-          router
-        >
+        <el-menu :default-active="activeMenu" class="admin-menu" router>
           <el-menu-item index="/admin/dashboard">
             <el-icon><data-analysis /></el-icon>
             <span>仪表板</span>
@@ -101,6 +98,7 @@ import {
   User,
   Setting,
   DataAnalysis,
+  HomeFilled,
 } from '@element-plus/icons-vue'
 import { Ship, Audit } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
@@ -112,6 +110,11 @@ const authStore = useAuthStore()
 // 计算属性
 const userInfo = computed(() => authStore.user)
 const activeMenu = computed(() => route.path)
+
+// 返回前台
+const goToFrontend = () => {
+  router.push('/user/dashboard')
+}
 
 // 处理下拉菜单命令
 const handleCommand = async (command: string) => {
@@ -127,14 +130,13 @@ const handleCommand = async (command: string) => {
         await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         })
         authStore.logout()
         ElMessage.success('已退出登录')
         router.push('/')
       } catch {
         // 用户取消操作
-
       }
       break
   }
@@ -182,6 +184,11 @@ const handleCommand = async (command: string) => {
 .header-right {
   display: flex;
   align-items: center;
+  gap: 16px;
+}
+
+.frontend-btn {
+  border-radius: 6px;
 }
 
 .user-info {

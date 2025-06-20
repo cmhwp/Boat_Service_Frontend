@@ -51,61 +51,79 @@
 
     <!-- 操作栏 -->
     <div class="toolbar">
-      <div class="toolbar-left">
-        <el-input
-          v-model="searchKeyword"
-          placeholder="搜索预约单号或联系人"
-          style="width: 300px"
-          clearable
-          @clear="handleSearch"
-          @keyup.enter="handleSearch"
-        >
-          <template #prefix>
-            <el-icon><search /></el-icon>
-          </template>
-        </el-input>
-        <el-select
-          v-model="filterStatus"
-          placeholder="预约状态"
-          style="width: 150px; margin-left: 16px"
-          clearable
-          @change="handleSearch"
-        >
-          <el-option label="待确认" value="pending" />
-          <el-option label="已确认" value="confirmed" />
-          <el-option label="进行中" value="in_progress" />
-          <el-option label="已完成" value="completed" />
-          <el-option label="已取消" value="cancelled" />
-          <el-option label="已拒绝" value="rejected" />
-        </el-select>
-        <el-date-picker
-          v-model="dateRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          style="margin-left: 16px"
-          @change="handleSearch"
-        />
-        <el-select
-          v-model="filterBoat"
-          placeholder="选择船只"
-          style="width: 200px; margin-left: 16px"
-          clearable
-          @change="handleSearch"
-        >
-          <el-option v-for="boat in boats" :key="boat.id" :label="boat.name" :value="boat.id" />
-        </el-select>
-        <el-button type="primary" @click="handleSearch">
-          <el-icon><search /></el-icon>
-          搜索
-        </el-button>
+      <!-- 第一行：筛选条件 -->
+      <div class="toolbar-row">
+        <div class="filter-group">
+          <el-input
+            v-model="searchKeyword"
+            placeholder="搜索预约单号或联系人"
+            class="search-input"
+            clearable
+            @clear="handleSearch"
+            @keyup.enter="handleSearch"
+          >
+            <template #prefix>
+              <el-icon><search /></el-icon>
+            </template>
+          </el-input>
+
+          <el-select
+            v-model="filterStatus"
+            placeholder="预约状态"
+            class="filter-select"
+            clearable
+            @change="handleSearch"
+          >
+            <el-option label="待确认" value="pending" />
+            <el-option label="已确认" value="confirmed" />
+            <el-option label="进行中" value="in_progress" />
+            <el-option label="已完成" value="completed" />
+            <el-option label="已取消" value="cancelled" />
+            <el-option label="已拒绝" value="rejected" />
+          </el-select>
+
+          <el-date-picker
+            v-model="dateRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            class="date-picker"
+            @change="handleSearch"
+          />
+
+          <el-select
+            v-model="filterBoat"
+            placeholder="选择船只"
+            class="boat-select"
+            clearable
+            @change="handleSearch"
+          >
+            <el-option v-for="boat in boats" :key="boat.id" :label="boat.name" :value="boat.id" />
+          </el-select>
+        </div>
       </div>
-      <div class="toolbar-right">
-        <el-button @click="handleRefresh">
-          <el-icon><refresh /></el-icon>
-          刷新
-        </el-button>
+
+      <!-- 第二行：操作按钮 -->
+      <div class="toolbar-row toolbar-actions">
+        <div class="action-group">
+          <el-button type="primary" @click="handleSearch">
+            <el-icon><search /></el-icon>
+            搜索
+          </el-button>
+          <el-button @click="handleRefresh">
+            <el-icon><refresh /></el-icon>
+            刷新
+          </el-button>
+          <el-button @click="resetFilters">
+            <el-icon><refresh-left /></el-icon>
+            重置
+          </el-button>
+        </div>
+
+        <div class="toolbar-info">
+          <span class="result-count"> 共找到 {{ pagination.total }} 条预约记录 </span>
+        </div>
       </div>
     </div>
 
@@ -378,6 +396,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Search,
   Refresh,
+  RefreshLeft,
   ArrowDown,
   Clock,
   Check,
@@ -402,7 +421,7 @@ const statsLoading = ref(false)
 const bookings = ref<API.BookingDetailSchema[]>([])
 const boats = ref<API.BoatListItemSchema[]>([])
 const availableCrew = ref<API.CrewListItemSchema[]>([])
-const stats = ref<API.BookingStatsSchema>({
+const stats = ref<API.app_schemas_booking_BookingStatsSchema>({
   total_bookings: 0,
   pending_bookings: 0,
   confirmed_bookings: 0,
@@ -592,6 +611,15 @@ const handleRefresh = () => {
   loadStats()
 }
 
+const resetFilters = () => {
+  searchKeyword.value = ''
+  filterStatus.value = ''
+  filterBoat.value = ''
+  dateRange.value = null
+  pagination.page = 1
+  loadBookings()
+}
+
 const handleSizeChange = (newSize: number) => {
   pagination.pageSize = newSize
   pagination.page = 1
@@ -762,17 +790,66 @@ onMounted(() => {
 .toolbar {
   background: #fff;
   border-radius: 8px;
-  padding: 16px;
+  padding: 20px;
   margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.toolbar-left {
+.toolbar-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.toolbar-row:last-child {
+  margin-bottom: 0;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  width: 280px;
+}
+
+.filter-select {
+  width: 140px;
+}
+
+.date-picker {
+  width: 260px;
+}
+
+.boat-select {
+  width: 180px;
+}
+
+.toolbar-actions {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  margin-bottom: 0;
+}
+
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-info {
+  display: flex;
+  align-items: center;
+}
+
+.result-count {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
 }
 
 .bookings-table {
@@ -822,5 +899,73 @@ onMounted(() => {
 .time-records h4 {
   margin-bottom: 16px;
   color: #1a1a1a;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .filter-group {
+    gap: 12px;
+  }
+
+  .search-input {
+    width: 240px;
+  }
+
+  .date-picker {
+    width: 220px;
+  }
+
+  .boat-select {
+    width: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 16px;
+  }
+
+  .toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-input,
+  .filter-select,
+  .date-picker,
+  .boat-select {
+    width: 100%;
+  }
+
+  .toolbar-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .action-group {
+    justify-content: center;
+  }
+
+  .toolbar-info {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .action-group .el-button {
+    width: 100%;
+  }
 }
 </style>

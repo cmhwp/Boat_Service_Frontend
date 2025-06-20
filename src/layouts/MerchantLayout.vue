@@ -11,6 +11,11 @@
       </div>
 
       <div class="header-right">
+        <el-button type="primary" size="small" @click="goToFrontend" class="frontend-btn">
+          <el-icon><HomeFilled /></el-icon>
+          返回前台
+        </el-button>
+
         <el-dropdown @command="handleCommand">
           <span class="user-info">
             <el-avatar :size="32" :src="userInfo?.avatar || undefined" :icon="User" />
@@ -106,6 +111,7 @@ import {
   DataAnalysis,
   List,
   Calendar,
+  HomeFilled,
 } from '@element-plus/icons-vue'
 import { Ship, MapRoad, User, Commodity } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
@@ -117,6 +123,11 @@ const authStore = useAuthStore()
 // 计算属性
 const userInfo = computed(() => authStore.user)
 const activeMenu = computed(() => route.path)
+
+// 返回前台
+const goToFrontend = () => {
+  router.push('/user/dashboard')
+}
 
 // 处理下拉菜单命令
 const handleCommand = async (command: string) => {
@@ -186,6 +197,11 @@ const handleCommand = async (command: string) => {
 .header-right {
   display: flex;
   align-items: center;
+  gap: 16px;
+}
+
+.frontend-btn {
+  border-radius: 6px;
 }
 
 .user-info {

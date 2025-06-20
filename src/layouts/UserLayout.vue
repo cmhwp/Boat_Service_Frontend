@@ -28,6 +28,10 @@
             <el-dropdown-menu>
               <el-dropdown-item command="profile">个人中心</el-dropdown-item>
               <el-dropdown-item command="qualification">资格认证</el-dropdown-item>
+              <el-dropdown-item v-if="showBackendAccess" command="backend" divided>
+                <el-icon><Setting /></el-icon>
+                返回后台
+              </el-dropdown-item>
               <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -49,7 +53,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { UserFilled, ArrowDown } from '@element-plus/icons-vue'
+import { UserFilled, ArrowDown, Setting } from '@element-plus/icons-vue'
 import { Ship } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
 
@@ -60,6 +64,9 @@ const authStore = useAuthStore()
 // 计算属性
 const userInfo = computed(() => authStore.user)
 const activeMenu = computed(() => route.path)
+const showBackendAccess = computed(
+  () => authStore.isMerchant || authStore.isCrew || authStore.isAdmin,
+)
 
 // 处理下拉菜单命令
 const handleCommand = async (command: string) => {
@@ -69,6 +76,16 @@ const handleCommand = async (command: string) => {
       break
     case 'qualification':
       router.push('/user/qualification')
+      break
+    case 'backend':
+      // 根据用户角色跳转到对应的后台
+      if (authStore.isAdmin) {
+        router.push('/admin/dashboard')
+      } else if (authStore.isMerchant) {
+        router.push('/merchant/dashboard')
+      } else if (authStore.isCrew) {
+        router.push('/crew/dashboard')
+      }
       break
     case 'logout':
       try {

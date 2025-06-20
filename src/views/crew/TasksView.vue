@@ -342,6 +342,7 @@ const getStatusText = (status: string) => {
   const statusMap: Record<string, string> = {
     confirmed: '待开始',
     in_progress: '进行中',
+    cancelled:'已取消',
     completed: '已完成',
   }
   return statusMap[status] || status

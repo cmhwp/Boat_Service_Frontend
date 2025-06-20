@@ -134,7 +134,9 @@
                 <div class="boat-specs">
                   <div class="spec-item">
                     <label>船只类型：</label>
-                    <span>{{ booking.boat?.boat_type || '未知' }}</span>
+                    <span>{{
+                      boatTypeMap[booking?.boat?.boat_type as API.BoatType] || '未知'
+                    }}</span>
                   </div>
                   <div class="spec-item">
                     <label>载客量：</label>
@@ -208,7 +210,7 @@
               <el-avatar :size="60" :src="booking.assigned_crew.avatar" :icon="UserFilled" />
               <div class="crew-details">
                 <h4>
-                  {{ booking.assigned_crew.username|| '未知船员' }}
+                  {{ booking.assigned_crew.username || '未知船员' }}
                 </h4>
                 <p v-if="booking.assigned_crew.phone || booking.assigned_crew.contact_phone">
                   联系电话：{{ booking.assigned_crew.phone || booking.assigned_crew.contact_phone }}
@@ -529,6 +531,11 @@ const rebookSame = () => {
   if (booking.value?.boat_id) {
     router.push(`/user/boats/${booking.value.boat_id}`)
   }
+}
+const boatTypeMap: Record<API.BoatType, string> = {
+  passenger: '观光船',
+  sightseeing: '快艇',
+  fishing: '钓鱼船',
 }
 
 // 页面加载时获取数据
