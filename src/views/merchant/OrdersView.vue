@@ -361,7 +361,7 @@ const fetchOrders = async () => {
   try {
     loading.value = true
     const response = await getMerchantOrdersApiV1OrdersMerchantListGet(searchParams.value)
-
+    console.log(response)
     if (response.data?.success && response.data.data) {
       orders.value = response.data.data.items
       pagination.total = response.data.data.total
@@ -425,6 +425,7 @@ const handleCurrentChange = (page: number) => {
 
 // 查看订单详情
 const viewOrderDetail = (orderId: number) => {
+  console.log(orderId)
   router.push(`/merchant/orders/${orderId}`)
 }
 

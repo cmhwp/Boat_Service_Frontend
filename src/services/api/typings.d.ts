@@ -1371,6 +1371,11 @@ declare namespace API {
     verification_code: string
   }
 
+  type confirmReceiptApiV1OrdersOrderIdConfirmReceiptPatchParams = {
+    /** 订单ID */
+    order_id: number
+  }
+
   type CrewApplicationDetailSchema = {
     /** Id */
     id: number
@@ -1776,6 +1781,11 @@ declare namespace API {
 
   type getMerchantByIdApiV1MerchantsMerchantIdGetParams = {
     merchant_id: number
+  }
+
+  type getMerchantOrderDetailApiV1OrdersMerchantOrderIdGetParams = {
+    /** 订单ID */
+    order_id: number
   }
 
   type getMerchantOrdersApiV1OrdersMerchantListGetParams = {

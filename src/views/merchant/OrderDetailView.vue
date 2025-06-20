@@ -75,28 +75,14 @@
         </div>
       </el-card>
 
-      <!-- 客户信息 -->
+      <!-- 收货信息 -->
       <el-card class="customer-info-card">
         <template #header>
-          <h3>客户信息</h3>
+          <h3>收货信息</h3>
         </template>
         <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="24">
             <div class="info-group">
-              <h4>客户详情</h4>
-              <div class="info-item">
-                <span class="label">客户姓名：</span>
-                <span class="value">{{ order.user?.username || '未知' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="label">客户邮箱：</span>
-                <span class="value">{{ order.user?.email || '未提供' }}</span>
-              </div>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="info-group">
-              <h4>收货信息</h4>
               <div class="info-item">
                 <span class="label">收货人：</span>
                 <span class="value">{{ order.receiver_name }}</span>
@@ -277,7 +263,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
-  getOrderDetailApiV1OrdersOrderIdGet,
+  getMerchantOrderDetailApiV1OrdersMerchantOrderIdGet,
   updateOrderStatusApiV1OrdersOrderIdStatusPatch,
 } from '@/services/api/orders'
 
@@ -314,7 +300,9 @@ const fetchOrderDetail = async () => {
 
   try {
     loading.value = true
-    const response = await getOrderDetailApiV1OrdersOrderIdGet({ order_id: orderId })
+    const response = await getMerchantOrderDetailApiV1OrdersMerchantOrderIdGet({
+      order_id: orderId,
+    })
 
     if (response.data?.success && response.data.data) {
       order.value = response.data.data

@@ -219,11 +219,18 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, ShoppingCart, StockMarket, Wallet, BankCard, PaperMoney } from '@icon-park/vue-next'
+import {
+  Search,
+  ShoppingCart,
+  StockMarket,
+  Wallet,
+  BankCard,
+  PaperMoney,
+} from '@icon-park/vue-next'
 import {
   getMyOrdersApiV1OrdersMyGet,
   cancelOrderApiV1OrdersOrderIdCancelPatch,
-  updateOrderStatusApiV1OrdersOrderIdStatusPatch,
+  confirmReceiptApiV1OrdersOrderIdConfirmReceiptPatch,
 } from '@/services/api/orders'
 import { createPaymentApiV1OrdersPaymentPost } from '@/services/api/orders'
 
@@ -380,15 +387,21 @@ const cancelOrder = async (orderId: number) => {
 // 确认收货
 const confirmOrder = async (orderId: number) => {
   try {
-    await ElMessageBox.confirm('确认已收到商品？', '确认收货', {
-      confirmButtonText: '确认收货',
-      cancelButtonText: '取消',
-      type: 'success',
-    })
+    const { value: notes } = await ElMessageBox.prompt(
+      '确认已收到商品？可添加收货备注',
+      '确认收货',
+      {
+        confirmButtonText: '确认收货',
+        cancelButtonText: '取消',
+        inputType: 'textarea',
+        inputPlaceholder: '请输入收货备注（可选）...',
+        inputValidator: () => true, // 备注是可选的，所以总是返回true
+      },
+    )
 
-    const response = await updateOrderStatusApiV1OrdersOrderIdStatusPatch(
+    const response = await confirmReceiptApiV1OrdersOrderIdConfirmReceiptPatch(
       { order_id: orderId },
-      { status: 'completed' },
+      notes || null,
     )
 
     if (response.data?.success) {

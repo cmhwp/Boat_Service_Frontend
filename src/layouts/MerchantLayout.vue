@@ -61,7 +61,6 @@
               <span>预约管理</span>
             </template>
             <el-menu-item index="/merchant/bookings">预约列表</el-menu-item>
-            <el-menu-item index="/merchant/bookings/pending">待处理预约</el-menu-item>
           </el-sub-menu>
 
           <el-sub-menu index="orders">

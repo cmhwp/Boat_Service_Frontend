@@ -43,6 +43,38 @@ export async function cancelOrderApiV1OrdersOrderIdCancelPatch(
   })
 }
 
+/** 确认收货 用户确认收货
+
+- **order_id**: 订单ID（路径参数）
+- **user_notes**: 用户备注（可选）
+
+限制条件：
+- 只能确认已送达状态的订单
+- 只能确认自己的订单
+- 确认收货后订单状态变为已完成
+
+业务说明：
+- 确认收货是订单流程的最后一步
+- 确认后订单不可再修改状态
+- 可以添加收货备注（如商品质量、服务评价等） PATCH /api/v1/orders/${param0}/confirm-receipt */
+export async function confirmReceiptApiV1OrdersOrderIdConfirmReceiptPatch(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.confirmReceiptApiV1OrdersOrderIdConfirmReceiptPatchParams,
+  body: string | null,
+  options?: { [key: string]: any }
+) {
+  const { order_id: param0, ...queryParams } = params
+  return request<API.ApiResponseOrderResponseSchema_>(`/api/v1/orders/${param0}/confirm-receipt`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** 更新订单状态 更新订单状态（商家操作）
 
 - **status**: 订单状态（必填）
@@ -212,6 +244,29 @@ export async function createOrderFromCartApiV1OrdersFromCartPost(
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  })
+}
+
+/** 获取商家订单详情 获取商家订单详情（商家端）
+
+- **order_id**: 订单ID
+
+只能查看属于当前商家的订单详情，包含：
+- 完整的订单信息
+- 用户信息
+- 订单项目详情
+- 支付信息
+- 物流状态等 GET /api/v1/orders/merchant/${param0} */
+export async function getMerchantOrderDetailApiV1OrdersMerchantOrderIdGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getMerchantOrderDetailApiV1OrdersMerchantOrderIdGetParams,
+  options?: { [key: string]: any }
+) {
+  const { order_id: param0, ...queryParams } = params
+  return request<API.ApiResponseOrderDetailSchema_>(`/api/v1/orders/merchant/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
     ...(options || {}),
   })
 }

@@ -241,7 +241,7 @@ import { StockMarket, User, Phone, Local, Wallet, BankCard, PaperMoney } from '@
 import {
   getOrderDetailApiV1OrdersOrderIdGet,
   cancelOrderApiV1OrdersOrderIdCancelPatch,
-  updateOrderStatusApiV1OrdersOrderIdStatusPatch,
+  confirmReceiptApiV1OrdersOrderIdConfirmReceiptPatch,
   createPaymentApiV1OrdersPaymentPost,
 } from '@/services/api/orders'
 
@@ -352,15 +352,21 @@ const confirmOrder = async () => {
   if (!order.value) return
 
   try {
-    await ElMessageBox.confirm('确认已收到商品？', '确认收货', {
-      confirmButtonText: '确认收货',
-      cancelButtonText: '取消',
-      type: 'success',
-    })
+    const { value: notes } = await ElMessageBox.prompt(
+      '确认已收到商品？可添加收货备注',
+      '确认收货',
+      {
+        confirmButtonText: '确认收货',
+        cancelButtonText: '取消',
+        inputType: 'textarea',
+        inputPlaceholder: '请输入收货备注（可选）...',
+        inputValidator: () => true, // 备注是可选的，所以总是返回true
+      },
+    )
 
-    const response = await updateOrderStatusApiV1OrdersOrderIdStatusPatch(
+    const response = await confirmReceiptApiV1OrdersOrderIdConfirmReceiptPatch(
       { order_id: order.value.id },
-      { status: 'completed' },
+      notes || null,
     )
 
     if (response.data?.success) {
