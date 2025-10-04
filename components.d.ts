@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AuthCard: typeof import('./src/components/auth/AuthCard.vue')['default']
+    BoatServiceReviewDialog: typeof import('./src/components/BoatServiceReviewDialog.vue')['default']
     CrewApplyModal: typeof import('./src/components/CrewApplyModal.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAlert: typeof import('element-plus/es')['ElAlert']
@@ -50,6 +51,7 @@ declare module 'vue' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
+    ElPopover: typeof import('element-plus/es')['ElPopover']
     ElProgress: typeof import('element-plus/es')['ElProgress']
     ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
@@ -57,6 +59,7 @@ declare module 'vue' {
     ElRate: typeof import('element-plus/es')['ElRate']
     ElResult: typeof import('element-plus/es')['ElResult']
     ElRow: typeof import('element-plus/es')['ElRow']
+    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSlider: typeof import('element-plus/es')['ElSlider']
@@ -75,6 +78,8 @@ declare module 'vue' {
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     MerchantApplyModal: typeof import('./src/components/MerchantApplyModal.vue')['default']
+    NotificationCenter: typeof import('./src/components/NotificationCenter.vue')['default']
+    ProductReviewDialog: typeof import('./src/components/ProductReviewDialog.vue')['default']
     QuickBookingDialog: typeof import('./src/components/QuickBookingDialog.vue')['default']
     RealnameAuthModal: typeof import('./src/components/RealnameAuthModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

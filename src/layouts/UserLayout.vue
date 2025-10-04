@@ -18,6 +18,9 @@
       </div>
 
       <div class="header-right">
+        <!-- 通知中心 -->
+        <notification-center style="margin-right: 16px;" />
+        
         <el-dropdown @command="handleCommand">
           <span class="user-info">
             <el-avatar :size="32" :src="userInfo?.avatar || undefined" :icon="UserFilled" />
@@ -56,6 +59,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { UserFilled, ArrowDown, Setting } from '@element-plus/icons-vue'
 import { Ship } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
+import NotificationCenter from '@/components/NotificationCenter.vue'
 
 const route = useRoute()
 const router = useRouter()

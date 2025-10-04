@@ -16,6 +16,9 @@
           返回前台
         </el-button>
 
+        <!-- 通知中心 -->
+        <notification-center style="margin: 0 16px;" />
+
         <el-dropdown @command="handleCommand">
           <span class="user-info">
             <el-avatar :size="32" :src="userInfo?.avatar || undefined" :icon="User" />
@@ -74,6 +77,11 @@
             </template>
             <el-menu-item index="/merchant/orders">订单列表</el-menu-item>
           </el-sub-menu>
+
+          <el-menu-item index="/merchant/split-payments">
+            <el-icon><Money /></el-icon>
+            <span>分账记录</span>
+          </el-menu-item>
           <!-- <el-menu-item index="/merchant/routes">
             <el-icon><map-road /></el-icon>
             <span>航线管理</span>
@@ -111,9 +119,11 @@ import {
   List,
   Calendar,
   HomeFilled,
+  Money,
 } from '@element-plus/icons-vue'
 import { Ship, MapRoad, User, Commodity } from '@icon-park/vue-next'
 import { useAuthStore } from '@/stores/auth'
+import NotificationCenter from '@/components/NotificationCenter.vue'
 
 const route = useRoute()
 const router = useRouter()

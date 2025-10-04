@@ -1123,6 +1123,21 @@ declare namespace API {
     updated_at: string
   }
 
+  type BoatServiceReviewCreateSchema = {
+    /** Booking Id 预约ID */
+    booking_id: number
+    /** Service Rating 服务质量评分 */
+    service_rating: number
+    /** Boat Rating 船艇状况评分 */
+    boat_rating: number
+    /** Value Rating 性价比评分 */
+    value_rating: number
+    /** Comment 评价内容 */
+    comment?: string | null
+    /** Tags 评价标签 */
+    tags?: string[]
+  }
+
   type BoatStatsSchema = {
     /** Total Boats 船舶总数 */
     total_boats: number
@@ -1800,6 +1815,10 @@ declare namespace API {
     product_id: number
   }
 
+  type deleteNotificationApiV1NotificationsNotificationIdDeleteParams = {
+    notification_id: number
+  }
+
   type deleteRealnameAuthApiV1RealnameAuthAuthIdDeleteParams = {
     auth_id: number
   }
@@ -1883,6 +1902,20 @@ declare namespace API {
   type getBoatDetailApiV1BoatsBoatIdGetParams = {
     /** 船只ID */
     boat_id: number
+  }
+
+  type getBoatServiceReviewsApiV1ReviewsBoatServiceGetParams = {
+    boat_id?: number | null
+    product_id?: number | null
+    merchant_id?: number | null
+    rating_min?: number | null
+    rating_max?: number | null
+    has_images?: boolean | null
+    has_comment?: boolean | null
+    sort_by?: string
+    sort_order?: string
+    page?: number
+    page_size?: number
   }
 
   type getBookingDetailApiV1BookingsBookingIdGetParams = {
@@ -2050,6 +2083,13 @@ declare namespace API {
     category?: ProductCategory | null
   }
 
+  type getNotificationsApiV1NotificationsGetParams = {
+    notification_type?: string | null
+    status?: string | null
+    page?: number
+    page_size?: number
+  }
+
   type getOrderDetailApiV1OrdersOrderIdGetParams = {
     /** 订单ID */
     order_id: number
@@ -2079,6 +2119,20 @@ declare namespace API {
     product_id: number
   }
 
+  type getProductReviewsApiV1ReviewsProductGetParams = {
+    boat_id?: number | null
+    product_id?: number | null
+    merchant_id?: number | null
+    rating_min?: number | null
+    rating_max?: number | null
+    has_images?: boolean | null
+    has_comment?: boolean | null
+    sort_by?: string
+    sort_order?: string
+    page?: number
+    page_size?: number
+  }
+
   type getProductsByCategoryApiV1ProductsCategoryCategoryGetParams = {
     /** 商品分类 */
     category: ProductCategory
@@ -2099,6 +2153,17 @@ declare namespace API {
     page_size?: number
     /** 认证状态筛选 */
     status?: RealnameAuthStatus | null
+  }
+
+  type getSplitPaymentsApiV1SplitPaymentsGetParams = {
+    split_type?: string | null
+    status?: string | null
+    merchant_id?: number | null
+    crew_id?: number | null
+    start_date?: string | null
+    end_date?: string | null
+    page?: number
+    page_size?: number
   }
 
   type getUserByIdApiV1UsersUserIdGetParams = {
@@ -2166,6 +2231,11 @@ declare namespace API {
     /** Expires In */
     expires_in: number
     user: UserResponseSchema
+  }
+
+  type markReviewHelpfulApiV1ReviewsReviewTypeReviewIdHelpfulPostParams = {
+    review_type: string
+    review_id: number
   }
 
   type MerchantApplySchema = {
@@ -2251,6 +2321,11 @@ declare namespace API {
     created_at: string
   }
 
+  type MerchantReplySchema = {
+    /** Reply Content 回复内容 */
+    reply_content: string
+  }
+
   type MerchantResponseSchema = {
     /** Id */
     id: number
@@ -2299,6 +2374,11 @@ declare namespace API {
     address?: string | null
     /** Description */
     description?: string | null
+  }
+
+  type NotificationMarkReadSchema = {
+    /** Notification Ids 通知ID列表 */
+    notification_ids: number[]
   }
 
   type OrderCreateSchema = {
@@ -2837,6 +2917,25 @@ declare namespace API {
     updated_at: string
   }
 
+  type ProductReviewCreateSchema = {
+    /** Order Id 订单ID */
+    order_id: number
+    /** Order Item Id 订单项ID */
+    order_item_id: number
+    /** Quality Rating 质量评分 */
+    quality_rating: number
+    /** Freshness Rating 新鲜度评分 */
+    freshness_rating: number
+    /** Packaging Rating 包装评分 */
+    packaging_rating: number
+    /** Comment 评价内容 */
+    comment?: string | null
+    /** Tags 评价标签 */
+    tags?: string[]
+    /** Is Anonymous 是否匿名 */
+    is_anonymous?: boolean
+  }
+
   type ProductStatsSchema = {
     /** Total Products 商品总数 */
     total_products: number
@@ -2970,6 +3069,14 @@ declare namespace API {
     cart_item_id: number
   }
 
+  type replyBoatServiceReviewApiV1ReviewsBoatServiceReviewIdReplyPostParams = {
+    review_id: number
+  }
+
+  type replyProductReviewApiV1ReviewsProductReviewIdReplyPostParams = {
+    review_id: number
+  }
+
   type ResetPasswordSchema = {
     /** Token */
     token: string
@@ -2999,6 +3106,19 @@ declare namespace API {
   type SendVerificationCodeSchema = {
     /** Email */
     email: string
+  }
+
+  type SplitRuleCreateSchema = {
+    /** Split Type 分账类型: booking/order */
+    split_type: string
+    /** Platform Ratio 平台分成比例 */
+    platform_ratio: number | string
+    /** Merchant Ratio 商家分成比例 */
+    merchant_ratio: number | string
+    /** Crew Ratio 船员分成比例 */
+    crew_ratio?: number | string
+    /** Description 规则说明 */
+    description?: string | null
   }
 
   type updateBoatStatusApiV1BoatsMyBoatIdStatusPatchParams = {

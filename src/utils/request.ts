@@ -53,7 +53,6 @@ request.interceptors.response.use(
     const { data } = response
     // 处理业务成功
     if (data.success || response.data.code === 200) {
-      ElMessage.success(data.message)
       return response
     }
     console.log(response)

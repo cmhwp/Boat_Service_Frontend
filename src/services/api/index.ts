@@ -12,6 +12,9 @@ import * as bookings from './bookings'
 import * as cart from './cart'
 import * as orders from './orders'
 import * as adminDashboard from './adminDashboard'
+import * as fenzhangguanli from './fenzhangguanli'
+import * as tongzhiguanli from './tongzhiguanli'
+import * as pingjiaguanli from './pingjiaguanli'
 import * as rootGet from './rootGet'
 import * as healthCheckHealthGet from './healthCheckHealthGet'
 export default {
@@ -25,6 +28,9 @@ export default {
   cart,
   orders,
   adminDashboard,
+  fenzhangguanli,
+  tongzhiguanli,
+  pingjiaguanli,
   rootGet,
   healthCheckHealthGet,
 }

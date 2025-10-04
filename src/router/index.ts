@@ -399,6 +399,16 @@ const router = createRouter({
             requiredRole: 'merchant',
           },
         },
+        {
+          path: 'split-payments',
+          name: 'MerchantSplitPayments',
+          component: () => import('@/views/merchant/SplitPaymentsView.vue'),
+          meta: {
+            title: '分账记录 - 绿色智能船艇农文旅平台',
+            requiresAuth: true,
+            requiredRole: 'merchant',
+          },
+        },
       ],
     },
 
